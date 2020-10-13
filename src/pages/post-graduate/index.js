@@ -1,13 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useObserver } from "mobx-react-lite";
 import { useApplication } from "../../store";
-import Content, { usePostGraduate } from "../../modules/post-graduate";
+import Content, { PostGraduateStore } from "../../modules/post-graduate";
 import Navbar from "../../components/navbar";
 import Router from "next/router";
 
 export default function Index() {
   const app = useApplication();
-  const postGraduate = usePostGraduate();
   const [data, setData] = useState({
     _id: "",
     title: "",
@@ -16,16 +14,16 @@ export default function Index() {
     learningpath: [],
   });
   useEffect(() => {
-    if (postGraduate._id === "") {
+    if (PostGraduateStore._id === "") {
       Router.push("/");
     } else {
-      setData(app.course.findPostGraduateById(postGraduate._id));
+      setData(app.course.findPostGraduateById(PostGraduateStore._id));
     }
-  }, [postGraduate._id, app.course]);
-  return useObserver(() => (
+  }, [app.course]);
+  return (
     <Fragment>
       <Navbar />
       {data._id !== "" && <Content data={data} />}
     </Fragment>
-  ));
+  );
 }

@@ -1,13 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useObserver } from "mobx-react-lite";
 import { useApplication } from "../../store";
-import Content, { useMaster } from "../../modules/master";
+import Content, { MasterStore } from "../../modules/master";
 import Navbar from "../../components/navbar";
 import Router from "next/router";
 
 export default function Index() {
   const app = useApplication();
-  const master = useMaster();
   const [data, setData] = useState({
     _id: "",
     title: "",
@@ -17,16 +15,16 @@ export default function Index() {
     description: "",
   });
   useEffect(() => {
-    if (master._id === "") {
+    if (MasterStore._id === "") {
       Router.push("/");
     } else {
-      setData(app.course.findMasterById(master._id));
+      setData(app.course.findMasterById(MasterStore._id));
     }
-  }, [master._id, app.course]);
-  return useObserver(() => (
+  }, [app.course]);
+  return (
     <Fragment>
       <Navbar />
       {data._id !== "" && <Content data={data} />}
     </Fragment>
-  ));
+  );
 }

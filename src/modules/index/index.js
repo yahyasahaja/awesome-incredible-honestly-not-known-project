@@ -1,9 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useObserver } from "mobx-react-lite";
-import { usePostGraduate } from "../post-graduate";
-import { useMaster } from "../master";
 import { Container, Button, Row, Col, Carousel, Card, Badge } from "react-bootstrap";
 import { Check, Star, Briefcase, Box, Codesandbox, Award } from "react-feather";
+import { useApplication } from "../../store";
+import { PostGraduateStore } from "../post-graduate";
+import { MasterStore } from "../master";
+import YouTube from "react-youtube";
 import Router from "next/router";
 
 function Welcome() {
@@ -15,10 +16,14 @@ function Welcome() {
       position: "absolute",
       filter: "brightness(0.5)",
     },
-    message: {
+    left: {
       position: "relative",
       paddingTop: 120,
       paddingBottom: 120,
+    },
+    right: {
+      position: "relative",
+      paddingTop: 57.5,
     },
     spacer: {
       marginTop: 12.5,
@@ -28,158 +33,117 @@ function Welcome() {
       color: "white",
     },
   };
-  return useObserver(() => (
+  return (
     <Fragment>
       <img src="./welcome.jpg" style={styles.image} />
       <Container>
-        <div style={styles.message}>
-          <h1 style={styles.text}>World’s #1 Online Bootcamp</h1>
-          <h6 style={styles.text}>1,000,000 careers advanced</h6>
-          <h6 style={styles.text}>1,000 live classes every month</h6>
-          <h6 style={styles.text}>
-            85% report career benefits including promotion or a new job
-          </h6>
-          <div style={styles.spacer} />
-          <Row>
-            <Col xs={5}>
-              <Button>All Courses</Button>
-            </Col>
-          </Row>
+        <div className="d-flex justify-content-between">
+          <div style={styles.left}>
+            <h1 style={styles.text}>World’s #1 Online Bootcamp</h1>
+            <h6 style={styles.text}>1,000,000 careers advanced</h6>
+            <h6 style={styles.text}>1,000 live classes every month</h6>
+            <h6 style={styles.text}>
+              85% report career benefits including promotion or a new job
+            </h6>
+            <div style={styles.spacer} />
+            <Row>
+              <Col xs={5}>
+                <Button>All Courses</Button>
+              </Col>
+            </Row>
+          </div>
+          <div style={styles.right}>
+            <YouTube
+              videoId="rqJl427Sr-4"
+              opts={{
+                width: "500",
+                height: "281",
+              }}
+            />
+          </div>
         </div>
       </Container>
     </Fragment>
-  ));
+  );
 }
 
 function Partnership() {
   const styles = {
     container: {
       marginTop: 25,
-      marginBottom: 30,
+      marginBottom: 25,
     },
     center: {
       textAlign: "center",
-      marginBottom: 30,
+      marginBottom: 25,
     },
     image: {
       width: "100%",
     },
   };
-  return useObserver(() => (
+  return (
     <Container style={styles.container}>
       <h5 style={styles.center}>
         Partnering with world&apos;s leading universities and companies
       </h5>
       <img src="./partnership.png" style={styles.image} />
     </Container>
-  ));
+  );
 }
 
-function PostGraduate(props) {
-  const iconsize = 15;
+function PostGraduate() {
   const styles = {
-    icon: {
-      marginBottom: 2.5,
-    },
-    container: {
-      marginBottom: 17.5,
-    },
-    checkbox: {
-      marginTop: 12.5,
-    },
     carousel: {
-      marginBottom: 17.5,
-    },
-    carouselitem: {
-      paddingLeft: "11.45%",
-      paddingRight: "11.45%",
-    },
-    cardtext: {
-      marginBottom: 0,
-    },
-    cardtextlink: {
-      marginBottom: 2.5,
-    },
-    cardbody: {
-      paddingTop: 15,
-      paddingBottom: 17.5,
-      paddingLeft: 15,
-      paddingRight: 15,
-    },
-  };
-  const postGraduate = usePostGraduate();
+      marginTop: 17.5,
+      marginBottom: 22.5
+    }
+  }
+  const app = useApplication();
   const [data, setData] = useState([]);
   useEffect(() => {
     const temp = [];
-    props.data.forEach(item => temp.unshift(item));
+    app.course.postgraduate.forEach(item => {
+      temp.unshift(item);
+    });
     const chunks = [];
     for (let i = Math.ceil(temp.length / 3); i > 0; i--) {
       chunks.push(temp.splice(0, Math.ceil(temp.length / i)));
     }
     setData(chunks);
-  }, [props.data]);
-  return useObserver(() => (
-    <Fragment>
-      <Container style={styles.container}>
-        <h4>Post Graduate Programs</h4>
-        <h6>
-          Learn from global experts and get certified by the world&apos;s
-          leading universities
-        </h6>
-        <Row style={styles.checkbox}>
-          <Col>
-            <small>
-              <Check size={iconsize} style={styles.icon} /> University
-              Certificates
-            </small>
-          </Col>
-          <Col>
-            <small>
-              <Check size={iconsize} style={styles.icon} /> University Alumni
-              Status
-            </small>
-          </Col>
-          <Col>
-            <small>
-              <Check size={iconsize} style={styles.icon} /> Masterclasses from
-              University
-            </small>
-          </Col>
-          <Col>
-            <small>
-              <Check size={iconsize} style={styles.icon} /> Career Support
-            </small>
-          </Col>
-        </Row>
-      </Container>
+  }, [app.course.postgraduate]);
+  return (
+    <Container>
+      <h4>Post Graduate Programs</h4>
+      <h6>
+        Learn from global experts and get certified by the world&apos;s leading
+        universities
+      </h6>
       <Carousel style={styles.carousel} indicators={false}>
         {data.map((parent, pid) => {
           return (
-            <Carousel.Item style={styles.carouselitem} key={pid}>
+            <Carousel.Item key={pid}>
               <Row>
                 {parent.map((child, cid) => {
                   return (
                     <Col xs={4} key={cid}>
                       <Card>
-                        <div style={styles.cardbody}>
-                          <h5 style={styles.cardtext}>{child.title}</h5>
+                        <Card.Body>
+                          <h5>{child.title}</h5>
+                          <hr />
+                          <h6>Course Start : {child.start}</h6>
+                          <h6>Program Duration : {child.duration}</h6>
                           <small>
                             <a
                               href="#!"
                               onClick={() => {
-                                postGraduate._id = child._id;
+                                PostGraduateStore._id = child._id;
                                 Router.push("/post-graduate");
                               }}
                             >
                               Click here to learn more
                             </a>
                           </small>
-                          <hr />
-                          <h6>Course Start : {child.start}</h6>
-                          <h6 style={styles.cardtextlink}>
-                            Program Duration : {child.duration}
-                          </h6>
-                        </div>
+                        </Card.Body>
                       </Card>
                     </Col>
                   );
@@ -189,83 +153,53 @@ function PostGraduate(props) {
           );
         })}
       </Carousel>
-      <Container>
-        <hr />
-      </Container>
-    </Fragment>
-  ));
+      <hr />
+    </Container>
+  );
 }
 
-function Master(props) {
+function Master() {
   const iconsize = 15;
   const styles = {
-    container: {
-      marginBottom: 15,
-    },
     carousel: {
-      marginBottom: 20,
-    },
-    carouselitem: {
-      paddingLeft: "11.45%",
-      paddingRight: "11.45%",
+      marginTop: 17.5,
+      marginBottom: 22.5
     },
     cardbody: {
       height: 187.5,
-      paddingTop: 15,
-      paddingLeft: 15,
-      paddingRight: 15,
-    },
-    cardtext: {
-      marginBottom: 0,
-    },
-    cardicon: {
-      marginBottom: 2.5,
     },
   };
-  const master = useMaster();
+  const app = useApplication();
   const [data, setData] = useState([]);
   useEffect(() => {
     const temp = [];
-    props.data.forEach(item =>  temp.unshift(item));
+    app.course.master.forEach(item => {
+      temp.unshift(item);
+    });
     const chunks = [];
     for (let i = Math.ceil(temp.length / 3); i > 0; i--) {
       chunks.push(temp.splice(0, Math.ceil(temp.length / i)));
     }
     setData(chunks);
-  }, [props.data]);
-  return useObserver(() => (
-    <Fragment>
-      <Container style={styles.container}>
-        <h4>Master&apos;s Programs</h4>
-        <h6>
-          Achieve your career goals with industry-recognized learning paths
-        </h6>
-      </Container>
+  }, [app.course.master]);
+  return (
+    <Container>
+      <h4>Master&apos;s Programs</h4>
+      <h6>Achieve your career goals with industry-recognized learning paths</h6>
       <Carousel style={styles.carousel} indicators={false}>
         {data.map((parent, pid) => {
           return (
-            <Carousel.Item style={styles.carouselitem} key={pid}>
+            <Carousel.Item key={pid}>
               <Row>
                 {parent.map((child, cid) => {
                   return (
                     <Col xs={4} key={cid}>
                       <Card>
                         <Card.Body style={styles.cardbody}>
-                          <h5 style={styles.cardtext}>{child.title}</h5>
-                          <small>
-                            <a
-                              href="#!"
-                              onClick={() => {
-                                master._id = child._id;
-                                Router.push("/master");
-                              }}
-                            >
-                              Click here to learn more
-                            </a>
-                          </small>
+                          <h5>{child.title}</h5>
                           <hr />
                           <h6>
-                            {child.duration} | {child.course}
+                            {child.duration} | {child.course} | <a href="#!" onClick={() => { MasterStore._id = child._id; Router.push("/master"); }}>Learn More</a>
                           </h6>
                           {child.detail.map((ditem, dindex) => {
                             return (
@@ -273,7 +207,6 @@ function Master(props) {
                                 <small>
                                   <Check
                                     size={iconsize}
-                                    style={styles.cardicon}
                                   />{" "}
                                   {ditem}
                                 </small>
@@ -291,84 +224,61 @@ function Master(props) {
           );
         })}
       </Carousel>
-      <Container>
-        <hr />
-      </Container>
-    </Fragment>
-  ));
+      <hr />
+    </Container>
+  );
 }
 
-function Certification(props) {
+function Certification() {
   const iconsize = 15;
   const styles = {
-    container: {
-      marginBottom: 17.5,
+    carousel: {
+      marginTop: 17.5,
+      marginBottom: 17.5
     },
-    carouselitem: {
-      paddingLeft: "11.45%",
-      paddingRight: "11.45%",
-    },
-    card: {
-      marginBottom: 17.5,
-    },
-    cardbody: {
-      paddingTop: 15,
-      paddingBottom: 7.5,
-      paddingLeft: 15,
-      paddingRight: 15,
-    },
-    cardtext: {
-      marginBottom: 0,
-    },
-    cardspacer: {
-      marginTop: 10,
-      marginBottom: 7.5,
-    },
-    cardbadge: {
-      marginBottom: 10,
-    },
-    cardicon: {
-      marginRight: 5,
-      marginBottom: 2.5,
-    },
+    icon: {
+      marginTop: -4,
+      marginRight: 4,
+    }
   };
+  const app = useApplication();
   const [data, setData] = useState([]);
   useEffect(() => {
     const temp = [];
-    props.data.forEach(item => temp.unshift(item));
+    app.asset.certification.forEach(item => {
+      temp.unshift(item);
+    });
     const chunks = [];
     for (let i = Math.ceil(temp.length / 3); i > 0; i--) {
       chunks.push(temp.splice(0, Math.ceil(temp.length / i)));
     }
     setData(chunks);
-  }, [props.data]);
-  return useObserver(() => (
-    <Fragment>
-      <Container style={styles.container}>
-        <h4>Certification Courses</h4>
-        <h6>
-          Get certified by global certification bodies and deepen your expertise
-        </h6>
-      </Container>
-      <Carousel indicators={false}>
+  }, [app.asset.certification]);
+  return (
+    <Container>
+      <h4>Certification Courses</h4>
+      <h6>
+        Get certified by global certification bodies and deepen your expertise
+      </h6>
+      <Carousel style={styles.carousel} indicators={false}>
         {data.map((parent, pid) => {
           return (
-            <Carousel.Item style={styles.carouselitem} key={pid}>
+            <Carousel.Item key={pid}>
               <Row>
                 {parent.map((child, cid) => {
                   return (
                     <Col xs={4} key={cid}>
-                      <Card style={styles.card}>
-                        <Card.Body style={styles.cardbody}>
-                          <h5 style={styles.cardtext}>{child.title}</h5>
-                          <hr style={styles.cardspacer} />
-                          <Badge variant="success" style={styles.cardbadge}>
-                            {child.badge}
-                          </Badge>
+                      <Card>
+                        <Card.Body>
+                          <h5>{child.title}</h5>
+                          <hr />
                           <h6>
-                            <Star size={iconsize} style={styles.cardicon} />
+                            <Star size={iconsize} style={styles.icon} />
                             {child.rating} | {child.learner} Learners
                           </h6>
+                          <Badge variant="success" className="d-inline">
+                            {child.badge}
+                          </Badge>
                         </Card.Body>
                       </Card>
                     </Col>
@@ -379,11 +289,11 @@ function Certification(props) {
           );
         })}
       </Carousel>
-    </Fragment>
-  ));
+    </Container>
+  );
 }
 
-function Programs(props) {
+function Programs() {
   const styles = {
     container: {
       paddingTop: 22.5,
@@ -392,31 +302,31 @@ function Programs(props) {
       paddingBottom: 22.5,
     },
   };
-  return useObserver(() => (
+  return (
     <Fragment>
       <Container style={styles.container}>
         <h2>Get Certified, Get Ahead with Our Programs</h2>
         <hr />
       </Container>
-      <PostGraduate data={props.postgraduate} />
-      <Master data={props.master} />
-      <Certification data={props.certification} />
+      <PostGraduate />
+      <Master />
+      <Certification />
       <div style={styles.footer} />
     </Fragment>
-  ));
+  );
 }
 
-function Description(props) {
+function Description() {
   const styles = {
     container: {
       paddingTop: 22.5,
       paddingBottom: 22.5,
     },
     title: {
-      marginBottom: 20,
+      marginBottom: 22.5,
     },
     icon: {
-      marginBottom: 25,
+      marginBottom: 30,
     },
   };
   const iconsize = 40;
@@ -426,14 +336,15 @@ function Description(props) {
     <Codesandbox size={iconsize} style={styles.icon} key={2} />,
     <Award size={iconsize} style={styles.icon} key={3} />,
   ];
-  return useObserver(() => (
-    <Fragment>
-      <Container style={styles.container}>
-        <h2 style={styles.title}>
-          Our online bootcamp is an immersive learning experience
-        </h2>
-        <Row>
-          {props.data.map((item, index) => {
+  const app = useApplication();
+  return (
+    <Container style={styles.container}>
+      <h2 style={styles.title}>
+        Our online bootcamp is an immersive learning experience
+      </h2>
+      <Row>
+        {app.asset.description.map(
+          (item, index) => {
             return (
               <Col xs={3} key={index}>
                 {icondata[index]}
@@ -441,31 +352,27 @@ function Description(props) {
                 <div className="text-muted">{item.description}</div>
               </Col>
             );
-          })}
-        </Row>
-      </Container>
-    </Fragment>
-  ));
+          }
+        )}
+      </Row>
+    </Container>
+  );
 }
 
-function Offering(props) {
+function Offering() {
   const styles = {
     container: {
       paddingTop: 22.5,
-      paddingBottom: 22.5,
+      paddingBottom: 15
     },
-    titleleft: {
-      marginBottom: -10,
-    },
-    spacer: {
-      marginTop: 98,
-      marginBottom: 98,
+    textmargin: {
+      marginBottom: 25
     },
     card: {
-      marginBottom: 25,
+      marginBottom: 20
     },
     cardbody: {
-      height: 80,
+      height: 75,
     },
     cardimg: {
       position: "absolute",
@@ -474,26 +381,25 @@ function Offering(props) {
       transform: "translate(-50%, -50%)",
     },
   };
-  return useObserver(() => (
+  const app = useApplication();
+  return (
     <Container style={styles.container}>
       <Row>
-        <Col xs={4}>
-          <h2 style={styles.titleleft}>Employee and Team Training Solutions</h2>
-          <div style={styles.spacer} />
-          <h5>
+        <Col xs={5}>
+          <h2 style={styles.textmargin}>Employee and Team Training Solutions</h2>
+          <h5 style={styles.textmargin}>
             Curriculum tailored to your organization, delivered with white-glove
             service and support
           </h5>
-          <div style={styles.spacer} />
-          <Button>Request A Free Demo</Button>
+          <a href="#!">Click here to get free demo</a>
         </Col>
-        <Col xs={8}>
-          <h3 style={styles.card}>Supporting Enterprises Around the Globe</h3>
+        <Col xs={7}>
+          <h2 style={styles.textmargin}>Supporting Enterprises Around the Globe</h2>
           <Row>
-            {props.data.map((item, index) => {
+            {app.asset.offering.map((item, index) => {
               return (
                 <Col xs={4} key={index}>
-                  <Card style={index < 7 ? styles.card : {}}>
+                  <Card style={styles.card}>
                     <Card.Body style={styles.cardbody}>
                       <div style={styles.cardimg}>
                         <img src={item} />
@@ -507,22 +413,21 @@ function Offering(props) {
         </Col>
       </Row>
     </Container>
-  ));
+  );
 }
 
-function Achievement(props) {
+function Achievement() {
   const styles = {
     container: {
       paddingTop: 22.5,
-      paddingBottom: 22.5,
+      paddingBottom: 27.5,
     },
     title: {
       marginBottom: -75,
     },
     image: {
       position: "absolute",
-      top: "50%",
-      left: "50%",
+      top: "50%", left: "50%",
       transform: "translate(-50%, -50%)",
     },
     description: {
@@ -532,31 +437,34 @@ function Achievement(props) {
       textAlign: "center",
     },
   };
-  return useObserver(() => (
+  const app = useApplication();
+  return (
     <Container style={styles.container}>
       <h2 style={styles.title}>Awards and Accolades</h2>
       <Row>
-        {props.data.map((item, index) => {
-          return (
-            <Col key={index}>
-              <div style={styles.image}>
-                <img src={item.src} />
-              </div>
-              <div style={styles.description}>
-                <h5 style={styles.center}>{item.title}</h5>
-                <div
-                  className="text-muted"
-                  style={styles.center}
-                >
-                  {item.description}
+        {app.asset.achievement.map(
+          (item, index) => {
+            return (
+              <Col key={index}>
+                <div style={styles.image}>
+                  <img src={item.src} />
                 </div>
-              </div>
-            </Col>
-          );
-        })}
+                <div style={styles.description}>
+                  <h5 style={styles.center}>{item.title}</h5>
+                  <div
+                    className="text-muted"
+                    style={styles.center}
+                  >
+                    {item.description}
+                  </div>
+                </div>
+              </Col>
+            );
+          }
+        )}
       </Row>
     </Container>
-  ));
+  );
 }
 
 function Footer() {
@@ -569,7 +477,7 @@ function Footer() {
       textAlign: "center",
     },
   };
-  return useObserver(() => (
+  return (
     <Container style={styles.container}>
       <div style={styles.center}>
         <a href="#!">Terms of Use</a>
@@ -587,34 +495,30 @@ function Footer() {
         </div>
       </small>
     </Container>
-  ));
+  );
 }
 
-export default function Index(props) {
+export default function Index() {
   const styles = {
     gray: {
       backgroundColor: "whitesmoke",
     },
   };
-  return useObserver(() => (
+  return (
     <Fragment>
       <Welcome />
       <Partnership />
       <div style={styles.gray}>
-        <Programs
-          postgraduate={props.postgraduate}
-          master={props.master}
-          certification={props.certification}
-        />
+        <Programs />
       </div>
-      <Description data={props.description} />
+      <Description />
       <div style={styles.gray}>
-        <Offering data={props.offering} />
+        <Offering />
       </div>
-      <Achievement data={props.achievement} />
+      <Achievement />
       <div style={styles.gray}>
         <Footer />
       </div>
     </Fragment>
-  ));
+  );
 }

@@ -1,39 +1,31 @@
-import React, { Fragment, createContext, useContext } from "react";
-import { observable } from "mobx";
-import { useObserver } from "mobx-react-lite";
+import React, { Fragment } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SortArray from "sort-objects-array";
 
 class PostGraduateClass {
-  @observable _id = "";
+  _id = "";
 }
 
-const PostGraduateStore = new PostGraduateClass();
-const PostGraduateContext = createContext(PostGraduateStore);
+export const PostGraduateStore = new PostGraduateClass();
 
-export const usePostGraduate = () => {
-  const context = useContext(PostGraduateContext);
-  return context;
-};
-
-function Intro(props) {
+function Intro({ data }) {
   const styles = {
     container: {
       paddingTop: 22.5,
       paddingBottom: 27.5,
     },
   };
-  return useObserver(() => (
+  return (
     <Container style={styles.container}>
-      <h3>{props.data.title}</h3>
+      <h3>{data.title}</h3>
       <hr />
-      <p>{props.data.description}</p>
+      <p>{data.description}</p>
       <Button variant="dark">Apply Now</Button>
     </Container>
-  ));
+  );
 }
 
-function Detail(props) {
+function Detail({ data }) {
   const styles = {
     container: {
       marginTop: 22.5,
@@ -44,7 +36,7 @@ function Detail(props) {
       textAlign: "center",
     },
   };
-  return useObserver(() => (
+  return (
     <Container style={styles.container}>
       <Row>
         <Col xs={4}>
@@ -60,7 +52,7 @@ function Detail(props) {
           <Card>
             <Card.Body>
               <h5 style={styles.text}>
-                Course start on {props.data.start}
+                Course start on {data.start}
               </h5>
             </Card.Body>
           </Card>
@@ -69,17 +61,17 @@ function Detail(props) {
           <Card>
             <Card.Body>
               <h5 style={styles.text}>
-                Program duration {props.data.duration}
+                Program duration {data.duration}
               </h5>
             </Card.Body>
           </Card>
         </Col>
       </Row>
     </Container>
-  ));
+  );
 }
 
-function LearningPath(props) {
+function LearningPath({ data }) {
   const styles = {
     container: {
       marginTop: 22.5,
@@ -96,43 +88,42 @@ function LearningPath(props) {
       marginBottom: 2.5,
     },
   };
-  return useObserver(() => (
+  return (
     <Container style={styles.container}>
       <Card>
         <Card.Header>
           <h6 style={styles.cardheader}>Learning Path</h6>
         </Card.Header>
         <ul className="timeline" style={styles.cardbody}>
-          {SortArray(props.data.learningpath, "order").map((item, index) => {
-            return (
-              <li key={index}>
-                <h6>{item.title}</h6>
-                <div style={styles.description}>{item.description}</div>
-                <small>
-                  <a href="#!">Preview Video</a>
-                </small>
-              </li>
-            )}
+          {SortArray(data.learningpath, "order").map(
+            (item, index) => {
+              return (
+                <li key={index}>
+                  <h6>{item.title}</h6>
+                  <div style={styles.description}>{item.description}</div>
+                </li>
+              );
+            }
           )}
         </ul>
       </Card>
     </Container>
-  ));
+  );
 }
 
-export default function Index(props) {
+export default function Index({ data }) {
   const styles = {
     gray: {
       backgroundColor: "whitesmoke",
     },
   };
-  return useObserver(() => (
+  return (
     <Fragment>
       <div style={styles.gray}>
-        <Intro data={props.data} />
+        <Intro data={data} />
       </div>
-      <Detail data={props.data} />
-      <LearningPath data={props.data} />
+      <Detail data={data} />
+      <LearningPath data={data} />
     </Fragment>
-  ));
+  );
 }

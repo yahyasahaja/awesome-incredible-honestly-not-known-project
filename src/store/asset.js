@@ -1,7 +1,5 @@
-import { observable } from "mobx";
-
 class AssetClass {
-  @observable certification = [
+  certification = [
     {
       title: "PMP® Certification",
       badge: "ADVANCED",
@@ -52,31 +50,26 @@ class AssetClass {
     },
   ];
 
-  @observable description = [
+  description = [
     {
       title: "Develop skills for real career growth",
-      description:
-        "Cutting-edge curriculum designed in guidance with industry and academia to develop job-ready skills",
+      description: "Cutting-edge curriculum designed in guidance with industry and academia to develop job-ready skills",
     },
     {
-      title:
-        "Learn from experts active in their field, not out-of-touch trainers",
-      description:
-        "Leading practitioners who bring current best practices and case studies to sessions that fit into your work schedule.",
+      title: "Learn from experts active in their field, not out-of-touch trainers",
+      description: "Leading practitioners who bring current best practices and case studies to sessions that fit into your work schedule.",
     },
     {
       title: "Learn by working on real-world problems",
-      description:
-        "Capstone projects involving real world data sets with virtual labs for hands-on learning",
+      description: "Capstone projects involving real world data sets with virtual labs for hands-on learning",
     },
     {
       title: "Structured guidance ensuring learning never stops",
-      description:
-        "24x7 Learning support from mentors and a community of like-minded peers to resolve any conceptual doubts",
+      description: "24x7 Learning support from mentors and a community of like-minded peers to resolve any conceptual doubts",
     },
   ];
 
-  @observable offering = [
+  offering = [
     "./sponsorship/amz.png",
     "./sponsorship/bosch.png",
     "./sponsorship/citi.png",
@@ -88,7 +81,7 @@ class AssetClass {
     "./sponsorship/wpp.png",
   ];
 
-  @observable achievement = [
+  achievement = [
     {
       src: "./achievement/2018-gold-winner.png",
       title: "2018 Gold Winner",

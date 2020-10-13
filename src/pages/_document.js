@@ -11,13 +11,9 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="stylesheet" href="./styles.css" />
-          <link rel="stylesheet" type="text/css" href="./nprogress.css" />
-          <link rel="stylesheet" type="text/css" href="./timeline.css" />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.0.0/animate.min.css"
-          />
+          <link rel="stylesheet" href="/styles.css" />
+          <link rel="stylesheet" type="text/css" href="/nprogress.css" />
+          <link rel="stylesheet" type="text/css" href="/timeline.css" />
         </Head>
         <body>
           <Main />

@@ -1,10 +1,8 @@
 import React, { Fragment } from "react";
-import ReactNotification from "react-notifications-component";
 import NProgress from "nprogress";
 import Router from "next/router";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "react-notifications-component/dist/theme.css";
 
 Router.events.on("routeChangeStart", (url) => {
   NProgress.start();
@@ -18,7 +16,6 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Simplilearn</title>
       </Head>
-      <ReactNotification />
       <Component {...pageProps} />
     </Fragment>
   );

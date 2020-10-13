@@ -1,11 +1,10 @@
 import { createContext, useContext } from "react";
-import { observable } from "mobx";
 import Asset from "./asset";
 import Course from "./course";
 
 class ApplicationClass {
-  @observable asset = Asset;
-  @observable course = Course;
+  asset = Asset;
+  course = Course;
 }
 
 export const ApplicationStore = new ApplicationClass();
