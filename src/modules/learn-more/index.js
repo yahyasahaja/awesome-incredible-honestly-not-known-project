@@ -2,12 +2,6 @@ import React, { Fragment } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SortArray from "sort-objects-array";
 
-class PostGraduateClass {
-  _id = "";
-}
-
-export const PostGraduateStore = new PostGraduateClass();
-
 function Intro({ data }) {
   const styles = {
     container: {
@@ -42,9 +36,16 @@ function Detail({ data }) {
         <Col xs={4}>
           <Card>
             <Card.Body>
-              <h5 style={styles.text}>
-                Post Graduate Program
-              </h5>
+              {data.type === "postgraduate" && (
+                <h5 style={styles.text}>
+                  Post Graduate Program
+                </h5>
+              )}
+              {data.type === "master" && (
+                <h5 style={styles.text}>
+                  Master Program
+                </h5>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -71,7 +72,7 @@ function Detail({ data }) {
   );
 }
 
-function LearningPath({ data }) {
+function LearningPath({ learningpath }) {
   const styles = {
     container: {
       marginTop: 22.5,
@@ -95,7 +96,7 @@ function LearningPath({ data }) {
           <h6 style={styles.cardheader}>Learning Path</h6>
         </Card.Header>
         <ul className="timeline" style={styles.cardbody}>
-          {SortArray(data.learningpath, "order").map(
+          {SortArray(learningpath, "order").map(
             (item, index) => {
               return (
                 <li key={index}>
@@ -123,7 +124,7 @@ export default function Index({ data }) {
         <Intro data={data} />
       </div>
       <Detail data={data} />
-      <LearningPath data={data} />
+      <LearningPath learningpath={data.learningpath} />
     </Fragment>
   );
 }
