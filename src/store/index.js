@@ -1,8 +1,14 @@
 import { createContext, useContext } from "react";
-import Asset from "./asset";
+import Course from "./course";
+import LearningPath from "./learningpath";
+import KeyFeature from "./keyfeature";
+import Content from "./content";
 
 class ApplicationClass {
-  asset = Asset;
+  course = Course;
+  learningpath = LearningPath;
+  keyfeature = KeyFeature;
+  content = Content;
 }
 
 export const ApplicationStore = new ApplicationClass();

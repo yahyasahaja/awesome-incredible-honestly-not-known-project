@@ -3,6 +3,7 @@ import NProgress from "nprogress";
 import Router from "next/router";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-quill/dist/quill.snow.css";
 
 Router.events.on("routeChangeStart", (url) => {
   NProgress.start();
