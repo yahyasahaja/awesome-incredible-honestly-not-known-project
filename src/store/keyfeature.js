@@ -3,6 +3,7 @@ import Fetch from "../library/fetch";
 class KeyFeatureClass {
   add(param) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation {
         keyfeature_add(
           order: "` + param.order + `",
@@ -10,6 +11,7 @@ class KeyFeatureClass {
           course: "` + param.course + `",
         ) { _id }
       }`).then(result => {
+        /* eslint-enable */
         resolve(result.data.keyfeature_add._id);
       });
     });
@@ -17,8 +19,10 @@ class KeyFeatureClass {
 
   delete(_id) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation { keyfeature_delete(_id:"` + _id + `"){ _id } }`)
       .then(() => { resolve() });
+      /* eslint-enable */
     });
   }
 }

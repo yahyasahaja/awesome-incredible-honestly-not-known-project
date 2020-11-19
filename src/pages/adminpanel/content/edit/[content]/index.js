@@ -1,13 +1,22 @@
+import Base64 from "base-64";
+import Dynamic from "next/dynamic";
+import Link from "next/link";
 import React, { Fragment, useState } from "react";
-import { useApplication } from "../../../../../store";
-import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
 import AdminPanel from "../../../../../components/adminpanel";
 import Fetch from "../../../../../library/fetch";
-import Dynamic from "next/dynamic";
-import Base64 from "base-64";
-import Link from "next/link";
+import { useApplication } from "../../../../../store";
 
 export async function getServerSideProps(ctx) {
+  /* eslint-disable */
   const results = await Fetch(`{
     contentById(_id:"` + ctx.params.content + `") {
       _id
@@ -16,13 +25,15 @@ export async function getServerSideProps(ctx) {
       content
     }
   }`).then(result => {
+    /* eslint-enable */
+    const content = {
+      _id: result.data.contentById._id,
+      order: result.data.contentById.order,
+      title: result.data.contentById.title,
+      content: Base64.decode(result.data.contentById.content),
+    };
     return {
-      content: {
-        _id: result.data.contentById._id,
-        order: result.data.contentById.order,
-        title: result.data.contentById.title,
-        content: Base64.decode(result.data.contentById.content),
-      },
+      content: content,
     };
   });
   return {
@@ -96,11 +107,22 @@ export default function Index({ data }) {
               href="/adminpanel/content/edit/[content]"
               as={"/adminpanel/content/edit/" + data._id}
             >
+              {data.title}
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/content/edit/[content]"
+              as={"/adminpanel/content/edit/" + data._id}
+            >
               Edit
             </Link>
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
+          <Card.Header>
+            <b>Edit Content</b>
+          </Card.Header>
           <Card.Body>
             <Form>
               <Row>
@@ -128,31 +150,33 @@ export default function Index({ data }) {
                   </Form.Group>
                 </Col>
               </Row>
+              <Form.Group>
+                <Form.Label>Content</Form.Label>
+                <QuillClientSide
+                  theme="snow"
+                  modules={quillmodules}
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Write your content here..."
+                  readOnly={loading}
+                />
+              </Form.Group>
+              <hr />
+              <Button
+                disabled={loading || title === "" || content === ""}
+                onClick={() => saveHandler()}
+                style={{ marginRight: 10 }}
+              >
+                Save Changes
+              </Button>
+              <Button
+                variant="danger"
+                disabled={loading}
+                onClick={() => deleteHandler()}
+              >
+                Delete Content
+              </Button>
             </Form>
-          </Card.Body>
-          <QuillClientSide
-            theme="snow"
-            modules={quillmodules}
-            value={content}
-            onChange={setContent}
-            placeholder="Write your content here..."
-            readOnly={loading}
-          />
-          <Card.Body>
-            <Button
-              disabled={loading || title === "" || content === ""}
-              onClick={() => saveHandler()}
-              style={{ marginRight: 10 }}
-            >
-              Save Changes
-            </Button>
-            <Button
-              variant="danger"
-              disabled={loading}
-              onClick={() => deleteHandler()}
-            >
-              Delete Content
-            </Button>
           </Card.Body>
         </Card>
       </Container>

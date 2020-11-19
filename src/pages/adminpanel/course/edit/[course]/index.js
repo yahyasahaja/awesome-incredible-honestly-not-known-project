@@ -1,12 +1,21 @@
-import React, { Fragment, useState } from "react";
-import { useApplication } from "../../../../../store";
-import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import AdminPanel from "../../../../../components/adminpanel";
-import NewLine from "../../../../../library/newline";
-import Fetch from "../../../../../library/fetch";
 import Link from "next/link";
+import React, { Fragment, useState } from "react";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
+import AdminPanel from "../../../../../components/adminpanel";
+import Fetch from "../../../../../library/fetch";
+import NewLine from "../../../../../library/newline";
+import { useApplication } from "../../../../../store";
 
 export async function getServerSideProps(ctx) {
+  /* eslint-disable */
   const results = await Fetch(`{
     courseById(_id: "` + ctx.params.course + `") {
       _id
@@ -19,10 +28,14 @@ export async function getServerSideProps(ctx) {
       keyfeature {
         _id
       }
+      quiz {
+        _id
+      }
     }
   }`).then(result => {
+    /* eslint-enable */
     return {
-      course: result.data.courseById
+      course: result.data.courseById,
     };
   });
   return {
@@ -71,11 +84,22 @@ export default function Index({ course }) {
               href="/adminpanel/course/edit/[course]"
               as={"/adminpanel/course/edit/" + course._id}
             >
+              {course.title}
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/course/edit/[course]"
+              as={"/adminpanel/course/edit/" + course._id}
+            >
               Edit
             </Link>
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
+          <Card.Header>
+            <b>Edit Content</b>
+          </Card.Header>
           <Card.Body>
             <Form>
               <Row>
@@ -135,7 +159,8 @@ export default function Index({ course }) {
               disabled={
                 loading ||
                 course.learningpath.length !== 0 ||
-                course.keyfeature.length !== 0
+                course.keyfeature.length !== 0 ||
+                course.quiz.length !== 0
               }
               onClick={() => deleteHandler()}
             >

@@ -1,19 +1,27 @@
+import Link from "next/link";
 import React, { Fragment, useState } from "react";
-import { useApplication } from "../../../../../store";
-import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  ListGroup,
+  Row,
+} from "react-bootstrap";
+import { ChevronDown, ChevronUp } from "react-feather";
+import SortArray from "sort-objects-array";
 import AdminPanel from "../../../../../components/adminpanel";
 import Fetch from "../../../../../library/fetch";
-import SortArray from "sort-objects-array";
-import Link from "next/link";
+import { useApplication } from "../../../../../store";
 
 export async function getServerSideProps(ctx) {
   /* eslint-disable */
   const results = await Fetch(`{
     courseById(_id: "` + ctx.params.course + `") {
       _id
-      type
       title
-      description
       keyfeature {
         _id
         order
@@ -21,6 +29,7 @@ export async function getServerSideProps(ctx) {
       }
     }
   }`).then(result => {
+    /* eslint-enable */
     return {
       course: result.data.courseById,
     };
@@ -36,17 +45,12 @@ export default function Index({ course }) {
   const styles = {
     container: { paddingTop: 12.5, paddingBottom: 12.5 },
     breadcrumb: { marginTop: -1.25 },
-    description: { textAlign: "justify" },
-    card: { marginTop: 15 },
-    cardheader: { marginBottom: 0 },
-    keyfeature: {
-      marginTop: -32.5,
-      marginRight: 27.5,
-      marginBottom: -1,
-    },
+    buttonadd: { padding: 0 },
+    keyfeaturecard: { marginTop: 15 },
   };
   const app = useApplication();
-  const [order, setOrder] = useState("1");
+  const [add, setAdd] = useState(false);
+  const [order, setOrder] = useState("");
   const [title, setTitle] = useState("");
   const [keyFeature, setKeyFeature] = useState(course.keyfeature);
   const [loading, setLoading] = useState(false);
@@ -59,7 +63,7 @@ export default function Index({ course }) {
         title: title,
         course: course._id,
       })
-      .then(result => {
+      .then((result) => {
         setKeyFeature([
           ...keyFeature,
           {
@@ -68,7 +72,7 @@ export default function Index({ course }) {
             title: title,
           },
         ]);
-        setOrder("1");
+        setOrder("");
         setTitle("");
         setLoading(false);
       });
@@ -77,7 +81,7 @@ export default function Index({ course }) {
     setLoading(true);
     app.keyfeature.delete(_id).then(() => {
       setKeyFeature(
-        keyFeature.filter(item => {
+        keyFeature.filter((item) => {
           return item._id !== _id;
         })
       );
@@ -100,83 +104,94 @@ export default function Index({ course }) {
               href="/adminpanel/course/keyfeature/[course]"
               as={"/adminpanel/course/keyfeature/" + course._id}
             >
+              {course.title}
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/course/keyfeature/[course]"
+              as={"/adminpanel/course/keyfeature/" + course._id}
+            >
               Key Feature
             </Link>
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
-          <Card.Body>
-            <h5>{course.title}</h5>
-            <small className="text-muted">
-              Type :{" "}
-              {course.type === "postgraduate" ? "Post Graduate" : "Master"}
-            </small>
-            <hr />
-            <div style={styles.description}>
-              {course.description}
-            </div>
-          </Card.Body>
-        </Card>
-        <Card style={styles.card}>
-          <Card.Header>
-            <h6 style={styles.cardheader}>Key Feature</h6>
+          <Card.Header className="d-flex justify-content-between">
+            <b>Add Key Feature</b>
+            <Button
+              size="sm"
+              variant="light"
+              style={styles.buttonadd}
+              onClick={() => setAdd(!add)}
+            >
+              {add ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </Button>
           </Card.Header>
-          <Card.Body>
-            <Form>
-              <Row>
-                <Col xs={2}>
-                  <Form.Group>
-                    <Form.Label>Order</Form.Label>
-                    <Form.Control
-                      type="number"
-                      min={1}
-                      disabled={loading}
-                      value={order}
-                      onChange={(e) => setOrder(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col xs={10}>
-                  <Form.Group>
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control
-                      value={title}
-                      disabled={loading}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g. 200+ Hours Of Applied Learning"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Button
-                disabled={loading || title === ""}
-                onClick={() => addHandler()}
-              >
-                Add Key Feature
-              </Button>
-            </Form>
-            <hr />
-          </Card.Body>
-          <ul className="timeline" style={styles.keyfeature}>
-            {SortArray(keyFeature, "order").map(item => {
+          {add === true && (
+            <Card.Body>
+              <Form>
+                <Row>
+                  <Col xs={2}>
+                    <Form.Group>
+                      <Form.Label>Order</Form.Label>
+                      <Form.Control
+                        type="number"
+                        min={1}
+                        disabled={loading}
+                        value={order}
+                        onChange={(e) => setOrder(e.target.value)}
+                        placeholder="e.g. 1"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={10}>
+                    <Form.Group>
+                      <Form.Label>Title</Form.Label>
+                      <Form.Control
+                        value={title}
+                        disabled={loading}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="e.g. 200+ Hours Of Applied Learning"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <hr />
+                <Button
+                  disabled={loading || order === "" || title === ""}
+                  onClick={() => addHandler()}
+                >
+                  Add Key Feature
+                </Button>
+              </Form>
+            </Card.Body>
+          )}
+        </Card>
+        <Card style={styles.keyfeaturecard}>
+          <Card.Header>
+            <b>Key Feature List</b>
+          </Card.Header>
+          <ListGroup variant="flush">
+            {SortArray(keyFeature, "order").map((item) => {
               return (
-                <li key={item._id}>
-                  <h6 style={styles.cardheader}>
+                <ListGroup.Item action key={item._id}>
+                  <b>
                     {item.order}. {item.title}
-                  </h6>
+                  </b>
                   {loading ? (
-                    <small className="text-muted">Delete</small>
+                    <div className="text-muted">Delete key feature</div>
                   ) : (
-                    <small>
+                    <div>
                       <a href="#!" onClick={() => deleteHandler(item._id)}>
-                        Delete
+                        Delete key feature
                       </a>
-                    </small>
+                    </div>
                   )}
-                </li>
+                </ListGroup.Item>
               );
             })}
-          </ul>
+          </ListGroup>
         </Card>
       </Container>
     </Fragment>

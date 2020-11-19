@@ -3,6 +3,7 @@ import Fetch from "../library/fetch";
 class LearningPathClass {
   add(param) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation {
         learningpath_add(
           order: "` + param.order + `",
@@ -11,6 +12,7 @@ class LearningPathClass {
           course: "` + param.course + `",
         ) { _id }
       }`).then(result => {
+        /* eslint-enable */
         resolve(result.data.learningpath_add._id);
       });
     });
@@ -18,8 +20,10 @@ class LearningPathClass {
 
   delete(_id) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation { learningpath_delete(_id:"` + _id + `"){ _id } }`)
-      .then(() => { resolve() });
+      .then(() => { resolve(); });
+      /* eslint-enable */
     });
   }
 }

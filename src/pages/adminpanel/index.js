@@ -1,8 +1,8 @@
+import Link from "next/link";
 import React, { Fragment } from "react";
 import { Breadcrumb, Card, Col, Container, Row } from "react-bootstrap";
 import { Book, FileText } from "react-feather";
 import AdminPanel from "../../components/adminpanel";
-import Link from "next/link";
 
 function CardMenu({ title, href, link, icon }) {
   return (

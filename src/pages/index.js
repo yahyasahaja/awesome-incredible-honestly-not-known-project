@@ -1,15 +1,16 @@
+import Base64 from "base-64";
+import Link from "next/link";
 import React, { Fragment, useState, useEffect } from "react";
 import { Container, Button, Row, Col, Carousel, Card } from "react-bootstrap";
 import { Compass, Key } from "react-feather";
+import ReactHtmlParser from "react-html-parser";
+import YouTube from "react-youtube";
+import SortArray from "sort-objects-array";
 import Navbar from "../components/navbar";
 import Fetch from "../library/fetch";
-import ReactHtmlParser from "react-html-parser";
-import SortArray from "sort-objects-array";
-import YouTube from "react-youtube";
-import Base64 from "base-64";
-import Link from "next/link";
 
 export async function getServerSideProps() {
+  /* eslint-disable */
   const results = await Fetch(`{
     allCourse {
       _id
@@ -29,27 +30,28 @@ export async function getServerSideProps() {
       content
     }
   }`).then(result => {
+    /* eslint-enable */
     const postgraduate = [];
     const master = [];
     const content = [];
-    result.data.allCourse.forEach(item => {
+    result.data.allCourse.forEach((item) => {
       if (item.type === "postgraduate") postgraduate.push(item);
       if (item.type === "master") master.push(item);
-    })
-    result.data.allContent.forEach(item => {
+    });
+    result.data.allContent.forEach((item) => {
       content.push({
         _id: item._id,
         order: item.order,
         title: item.title,
         content: Base64.decode(item.content),
       });
-    })
+    });
     return {
       postgraduate: postgraduate,
       master: master,
       content: content,
     };
-  })
+  });
   return {
     props: {
       postgraduate: results.postgraduate,

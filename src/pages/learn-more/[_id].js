@@ -1,12 +1,13 @@
 import React, { Fragment } from "react";
 import { Button, Card, Container } from "react-bootstrap";
 import { CheckCircle } from "react-feather";
+import SortArray from "sort-objects-array";
 import Navbar from "../../components/navbar";
 import Fetch from "../../library/fetch";
-import SortArray from "sort-objects-array";
 
 export async function getServerSideProps(context) {
-  const data = await Fetch(`{
+  /* eslint-disable */
+  const results = await Fetch(`{
     courseById(_id:"` + context.params._id + `") {
       _id
       type
@@ -25,11 +26,14 @@ export async function getServerSideProps(context) {
       }
     }
   }`).then(result => {
-    return result.data.courseById;
-  })
+    /* eslint-enable */
+    return {
+      data: result.data.courseById,
+    };
+  });
   return {
     props: {
-      data: data,
+      data: results.data,
     },
   };
 }
@@ -58,7 +62,7 @@ function Intro({ data }) {
       </h6>
       <hr />
       <p>{data.description}</p>
-      {SortArray(data.keyfeature, "order").map(item => {
+      {SortArray(data.keyfeature, "order").map((item) => {
         return (
           <Fragment key={item._id}>
             <h6>

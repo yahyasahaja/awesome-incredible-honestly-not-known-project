@@ -1,10 +1,18 @@
-import React, { Fragment, useState } from "react";
-import { useApplication } from "../../../../store";
-import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import AdminPanel from "../../../../components/adminpanel";
-import Dynamic from "next/dynamic";
 import Base64 from "base-64";
+import Dynamic from "next/dynamic";
 import Link from "next/link";
+import React, { Fragment, useState } from "react";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
+import AdminPanel from "../../../../components/adminpanel";
+import { useApplication } from "../../../../store";
 
 const QuillClientSide = Dynamic(import("react-quill"), {
   ssr: false,
@@ -66,6 +74,9 @@ export default function Index() {
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
+          <Card.Header>
+            <b>Add Content</b>
+          </Card.Header>
           <Card.Body>
             <Form>
               <Row>
@@ -93,23 +104,25 @@ export default function Index() {
                   </Form.Group>
                 </Col>
               </Row>
+              <Form.Group>
+                <Form.Label>Content</Form.Label>
+                <QuillClientSide
+                  theme="snow"
+                  modules={quillmodules}
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Write your content here..."
+                  readOnly={loading}
+                />
+              </Form.Group>
+              <hr />
+              <Button
+                disabled={loading || title === "" || content === ""}
+                onClick={() => addHandler()}
+              >
+                Add Content
+              </Button>
             </Form>
-          </Card.Body>
-          <QuillClientSide
-            theme="snow"
-            modules={quillmodules}
-            value={content}
-            onChange={setContent}
-            placeholder="Write your content here..."
-            readOnly={loading}
-          />
-          <Card.Body>
-            <Button
-              disabled={loading || title === "" || content === ""}
-              onClick={() => addHandler()}
-            >
-              Add Content
-            </Button>
           </Card.Body>
         </Card>
       </Container>

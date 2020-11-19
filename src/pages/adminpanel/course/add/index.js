@@ -1,9 +1,17 @@
+import Link from "next/link";
 import React, { Fragment, useState } from "react";
-import { useApplication } from "../../../../store";
-import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
 import AdminPanel from "../../../../components/adminpanel";
 import NewLine from "../../../../library/newline";
-import Link from "next/link";
+import { useApplication } from "../../../../store";
 
 export default function Index() {
   const styles = {
@@ -40,6 +48,9 @@ export default function Index() {
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
+          <Card.Header>
+            <b>Add Course</b>
+          </Card.Header>
           <Card.Body>
             <Form>
               <Row>

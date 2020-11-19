@@ -9,22 +9,30 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
-import AdminPanel from "../../../components/adminpanel";
-import Fetch from "../../../library/fetch";
+import SortArray from "sort-objects-array";
+import AdminPanel from "../../../../../components/adminpanel";
+import Fetch from "../../../../../library/fetch";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
   /* eslint-disable */
   const results = await Fetch(`{
-    allCourse {
+    courseById(_id: "` + ctx.params.course + `") {
       _id
-      type
       title
-      description
+      quiz {
+        _id
+        title
+      }
     }
   }`).then(result => {
     /* eslint-enable */
-    const course = [];
-    result.data.allCourse.forEach((item) => course.unshift(item));
+    const quiz = [];
+    result.data.courseById.quiz.forEach((item) => quiz.unshift(item));
+    const course = {
+      _id: result.data.courseById._id,
+      title: result.data.courseById.title,
+      quiz: quiz,
+    };
     return {
       course: course,
     };
@@ -52,16 +60,38 @@ export default function Index({ course }) {
           <Breadcrumb.Item style={styles.breadcrumb}>
             <Link href="/adminpanel/course">Course</Link>
           </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/course/quiz/[course]"
+              as={"/adminpanel/course/quiz/" + course._id}
+            >
+              {course.title}
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/course/quiz/[course]"
+              as={"/adminpanel/course/quiz/" + course._id}
+            >
+              Quiz
+            </Link>
+          </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Course List</b>
+            <b>Quiz List</b>
           </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
               <div>
-                <Button onClick={() => Router.push("/adminpanel/course/add")}>
-                  Add Course
+                <Button
+                  onClick={() =>
+                    Router.push(
+                      "/adminpanel/course/quiz/" + course._id + "/add"
+                    )
+                  }
+                >
+                  Add Quiz
                 </Button>
               </div>
               <div>
@@ -69,48 +99,25 @@ export default function Index({ course }) {
               </div>
             </div>
           </Card.Body>
-          {course.length !== 0 && (
+          {course.quiz.length !== 0 && (
             <ListGroup variant="flush">
-              {course.map((item) => {
+              {SortArray(course.quiz, "order").map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
                       <b>{item.title}</b>
                     </div>
-                    <small className="text-muted">
-                      Type :{" "}
-                      {item.type === "postgraduate"
-                        ? "Post Graduate"
-                        : "Master"}
-                    </small>
-                    <br />
                     <small>
                       <Link
-                        href="/adminpanel/course/edit/[course]"
-                        as={"/adminpanel/course/edit/" + item._id}
+                        href="/adminpanel/course/quiz/[course]/edit/[quiz]"
+                        as={
+                          "/adminpanel/course/quiz/" +
+                          course._id +
+                          "/edit/" +
+                          item._id
+                        }
                       >
-                        Edit Course
-                      </Link>
-                      {" / "}
-                      <Link
-                        href="/adminpanel/course/keyfeature/[course]"
-                        as={"/adminpanel/course/keyfeature/" + item._id}
-                      >
-                        Key Feature
-                      </Link>
-                      {" / "}
-                      <Link
-                        href="/adminpanel/course/learningpath/[course]"
-                        as={"/adminpanel/course/learningpath/" + item._id}
-                      >
-                        Learning Path
-                      </Link>
-                      {" / "}
-                      <Link
-                        href="/adminpanel/course/quiz/[course]"
-                        as={"/adminpanel/course/quiz/" + item._id}
-                      >
-                        Quiz
+                        Click here to edit
                       </Link>
                     </small>
                   </ListGroup.Item>

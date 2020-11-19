@@ -1,6 +1,6 @@
+import Router from "next/router";
 import React from "react";
 import { Button, Container, Navbar } from "react-bootstrap";
-import Router from "next/router";
 
 export default function Index() {
   return (

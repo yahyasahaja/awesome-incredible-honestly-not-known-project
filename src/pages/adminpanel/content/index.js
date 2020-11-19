@@ -1,12 +1,20 @@
+import Link from "next/link";
+import Router from "next/router";
 import React, { Fragment } from "react";
-import { Breadcrumb, Button, Card, Container, FormControl } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Container,
+  FormControl,
+  ListGroup,
+} from "react-bootstrap";
+import SortArray from "sort-objects-array";
 import AdminPanel from "../../../components/adminpanel";
 import Fetch from "../../../library/fetch";
-import SortArray from "sort-objects-array";
-import Router from "next/router";
-import Link from "next/link";
 
 export async function getServerSideProps() {
+  /* eslint-disable */
   const results = await Fetch(`{
     allContent {
       _id
@@ -14,8 +22,9 @@ export async function getServerSideProps() {
       title
     }
   }`).then(result => {
+    /* eslint-enable */
     return {
-      content: result.data.allContent
+      content: result.data.allContent,
     };
   });
   return {
@@ -43,6 +52,9 @@ export default function Index({ content }) {
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
+          <Card.Header>
+            <b>Content List</b>
+          </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
               <div>
@@ -54,26 +66,30 @@ export default function Index({ content }) {
                 <FormControl placeholder="Search..." />
               </div>
             </div>
-            <hr />
-            {SortArray(content, "order").map((item, index) => {
-              return (
-                <Fragment key={item._id}>
-                  <h6 style={{ marginBottom: 2 }}>
-                    {item.order}. {item.title}
-                  </h6>
-                  <small>
-                    <Link
-                      href="/adminpanel/content/edit/[content]"
-                      as={"/adminpanel/content/edit/" + item._id}
-                    >
-                      Click here to edit
-                    </Link>
-                  </small>
-                  {index !== content.length - 1 && <hr />}
-                </Fragment>
-              );
-            })}
           </Card.Body>
+          {content.length !== 0 && (
+            <ListGroup variant="flush">
+              {SortArray(content, "order").map((item) => {
+                return (
+                  <ListGroup.Item action key={item._id}>
+                    <div>
+                      <b>
+                        {item.order}. {item.title}
+                      </b>
+                    </div>
+                    <small>
+                      <Link
+                        href="/adminpanel/content/edit/[content]"
+                        as={"/adminpanel/content/edit/" + item._id}
+                      >
+                        Click here to edit
+                      </Link>
+                    </small>
+                  </ListGroup.Item>
+                );
+              })}
+            </ListGroup>
+          )}
         </Card>
       </Container>
     </Fragment>

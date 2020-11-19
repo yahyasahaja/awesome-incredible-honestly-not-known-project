@@ -1,14 +1,18 @@
 import { createContext, useContext } from "react";
-import Course from "./course";
-import LearningPath from "./learningpath";
-import KeyFeature from "./keyfeature";
 import Content from "./content";
+import Course from "./course";
+import KeyFeature from "./keyfeature";
+import LearningPath from "./learningpath";
+import Question from "./question";
+import Quiz from "./quiz";
 
 class ApplicationClass {
-  course = Course;
-  learningpath = LearningPath;
-  keyfeature = KeyFeature;
   content = Content;
+  course = Course;
+  keyfeature = KeyFeature;
+  learningpath = LearningPath;
+  question = Question;
+  quiz = Quiz;
 }
 
 export const ApplicationStore = new ApplicationClass();

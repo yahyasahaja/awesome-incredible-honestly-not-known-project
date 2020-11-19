@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
-import NProgress from "nprogress";
-import Router from "next/router";
 import Head from "next/head";
+import Router from "next/router";
+import NProgress from "nprogress";
+import React, { Fragment } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-quill/dist/quill.snow.css";
 

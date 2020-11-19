@@ -1,6 +1,6 @@
+import Link from "next/link";
 import React, { Fragment } from "react";
 import { Button, Container, Navbar } from "react-bootstrap";
-import Link from "next/link";
 
 export default function Index() {
   return (

@@ -1,4 +1,3 @@
-import Router from "next/router";
 import Fetch from "../library/fetch";
 
 class ContentClass {
@@ -6,15 +5,19 @@ class ContentClass {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        content_add(
+        question_add(
           order: "` + param.order + `",
-          title: "` + param.title + `",
-          content: "` + param.content + `",
+          question: "` + param.question + `",
+          answer: "` + param.answer + `",
+          a: "` + param.a + `",
+          b: "` + param.b + `",
+          c: "` + param.c + `",
+          d: "` + param.d + `",
+          quiz: "` + param.quiz + `",
         ) { _id }
       }`).then(result => {
         /* eslint-enable */
-        Router.push("/adminpanel/content");
-        resolve(result.data.content_add._id);
+        resolve(result.data.question_add._id);
       });
     });
   }
@@ -23,15 +26,18 @@ class ContentClass {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        content_update(
+        question_update(
           _id: "` + param._id + `",
           order: "` + param.order + `",
-          title: "` + param.title + `",
-          content: "` + param.content + `",
+          question: "` + param.question + `",
+          answer: "` + param.answer + `",
+          a: "` + param.a + `",
+          b: "` + param.b + `",
+          c: "` + param.c + `",
+          d: "` + param.d + `",
         ) { _id }
       }`).then(() => {
         /* eslint-enable */
-        Router.push("/adminpanel/content");
         resolve();
       });
     });
@@ -40,13 +46,9 @@ class ContentClass {
   delete(_id) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
-      Fetch(`mutation { content_delete(_id:"` + _id + `"){ _id } }`)
-      .then(() => {
-        /* eslint-enable */
-          Router.push("/adminpanel/content");
-          resolve();
-        }
-      );
+      Fetch(`mutation { question_delete(_id:"` + _id + `"){ _id } }`)
+      .then(() => { resolve() });
+      /* eslint-enable */
     });
   }
 }

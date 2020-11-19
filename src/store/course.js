@@ -1,9 +1,10 @@
-import Fetch from "../library/fetch";
 import Router from "next/router";
+import Fetch from "../library/fetch";
 
 class CourseClass {
   add(param) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation {
         course_add(
           type: "` + param.type + `",
@@ -11,6 +12,7 @@ class CourseClass {
           description: "` + param.description + `",
         ) { _id }
       }`).then(result => {
+        /* eslint-enable */
         Router.push("/adminpanel/course");
         resolve(result.data.course_add._id);
       });
@@ -19,6 +21,7 @@ class CourseClass {
 
   update(param) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation {
         course_update(
           _id: "` + param._id + `",
@@ -27,6 +30,7 @@ class CourseClass {
           description: "` + param.description + `",
         ) { _id }
       }`).then(() => {
+        /* eslint-enable */
         Router.push("/adminpanel/course");
         resolve();
       });
@@ -35,8 +39,10 @@ class CourseClass {
 
   delete(_id) {
     return new Promise((resolve, reject) => {
+      /* eslint-disable */
       Fetch(`mutation { course_delete(_id:"` + _id + `"){ _id } }`)
       .then(() => {
+        /* eslint-enable */
         Router.push("/adminpanel/course");
         resolve();
       });
