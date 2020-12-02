@@ -1,54 +1,53 @@
 import Router from "next/router";
-import Fetch from "../library/fetch";
+import Fetch from "../libraries/fetch";
 
-class CourseClass {
+class TaskClass {
   add(param) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        course_add(
-          type: "` + param.type + `",
+        task_add(
           title: "` + param.title + `",
           description: "` + param.description + `",
+          class: "` + param.class + `",
         ) { _id }
       }`).then(result => {
         /* eslint-enable */
-        Router.push("/adminpanel/course");
-        resolve(result.data.course_add._id);
+        Router.push("/adminpanel/class/manage/" + param.class + "/task");
+        resolve(result.data.task_add._id);
       });
     });
   }
 
-  update(param) {
+  update(param, router) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        course_update(
+        task_update(
           _id: "` + param._id + `",
-          type: "` + param.type + `",
           title: "` + param.title + `",
           description: "` + param.description + `",
         ) { _id }
       }`).then(() => {
         /* eslint-enable */
-        Router.push("/adminpanel/course");
+        Router.push("/adminpanel/class/manage/" + router + "/task");
         resolve();
       });
     });
   }
 
-  delete(_id) {
+  delete(_id, router) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
-      Fetch(`mutation { course_delete(_id:"` + _id + `"){ _id } }`)
+      Fetch(`mutation { task_delete(_id:"` + _id + `"){ _id } }`)
       .then(() => {
         /* eslint-enable */
-        Router.push("/adminpanel/course");
+        Router.push("/adminpanel/class/manage/" + router + "/task");
         resolve();
       });
     });
   }
 }
 
-const CourseStore = new CourseClass();
-export default CourseStore;
+const TaskStore = new TaskClass();
+export default TaskStore;

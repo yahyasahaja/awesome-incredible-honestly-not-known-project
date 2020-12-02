@@ -13,9 +13,9 @@ import {
 import { ChevronDown, ChevronUp } from "react-feather";
 import SortArray from "sort-objects-array";
 import AdminPanel from "../../../../../components/adminpanel";
-import Fetch from "../../../../../library/fetch";
-import NewLine from "../../../../../library/newline";
-import { useApplication } from "../../../../../store";
+import Fetch from "../../../../../libraries/fetch";
+import NewLine from "../../../../../libraries/newline";
+import { useApplication } from "../../../../../stores";
 
 export async function getServerSideProps(ctx) {
   /* eslint-disable */
@@ -62,7 +62,6 @@ export default function Index({ course }) {
     setLoading(true);
     app.learningpath
       .add({
-        _id: "",
         order: order,
         title: title,
         description: NewLine(description),

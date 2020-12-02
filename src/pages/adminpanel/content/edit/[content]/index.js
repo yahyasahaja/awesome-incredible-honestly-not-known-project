@@ -12,8 +12,8 @@ import {
   Row,
 } from "react-bootstrap";
 import AdminPanel from "../../../../../components/adminpanel";
-import Fetch from "../../../../../library/fetch";
-import { useApplication } from "../../../../../store";
+import Fetch from "../../../../../libraries/fetch";
+import { useApplication } from "../../../../../stores";
 
 export async function getServerSideProps(ctx) {
   /* eslint-disable */

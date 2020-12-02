@@ -9,32 +9,37 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
-import SortArray from "sort-objects-array";
 import AdminPanel from "../../../components/adminpanel";
 import Fetch from "../../../libraries/fetch";
 
 export async function getServerSideProps() {
   /* eslint-disable */
   const results = await Fetch(`{
-    allContent {
+    allClass {
       _id
-      order
-      title
+      name
+      course {
+        _id
+        type
+        title
+      }
     }
   }`).then(result => {
     /* eslint-enable */
+    const allClass = [];
+    result.data.allClass.forEach((item) => allClass.unshift(item));
     return {
-      content: result.data.allContent,
+      allClass: allClass,
     };
   });
   return {
     props: {
-      content: results.content,
+      allClass: results.allClass,
     },
   };
 }
 
-export default function Index({ content }) {
+export default function Index({ allClass }) {
   const styles = {
     container: { paddingTop: 12.5, paddingBottom: 12.5 },
     breadcrumb: { marginTop: -1.25 },
@@ -48,18 +53,18 @@ export default function Index({ content }) {
             <Link href="/adminpanel">Admin Panel</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item style={styles.breadcrumb}>
-            <Link href="/adminpanel/content">Content</Link>
+            <Link href="/adminpanel/class">Class</Link>
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Content List</b>
+            <b>Class List</b>
           </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
               <div>
-                <Button onClick={() => Router.push("/adminpanel/content/add")}>
-                  Add Content
+                <Button onClick={() => Router.push("/adminpanel/class/add")}>
+                  Add Class
                 </Button>
               </div>
               <div>
@@ -67,22 +72,36 @@ export default function Index({ content }) {
               </div>
             </div>
           </Card.Body>
-          {content.length !== 0 && (
+          {allClass.length !== 0 && (
             <ListGroup variant="flush">
-              {SortArray(content, "order").map((item) => {
+              {allClass.map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
                       <b>
-                        {item.order}. {item.title}
+                        {item.name} / {item.course[0].title}
                       </b>
                     </div>
+                    <small className="text-muted">
+                      Type :{" "}
+                      {item.course[0].type === "postgraduate"
+                        ? "Post Graduate"
+                        : "Master"}
+                    </small>
+                    <br />
                     <small>
                       <Link
-                        href="/adminpanel/content/edit/[content]"
-                        as={"/adminpanel/content/edit/" + item._id}
+                        href="/adminpanel/class/edit/[class]"
+                        as={"/adminpanel/class/edit/" + item._id}
                       >
-                        Click here to edit
+                        Edit
+                      </Link>
+                      {" / "}
+                      <Link
+                        href="/adminpanel/class/manage/[class]"
+                        as={"/adminpanel/class/manage/" + item._id}
+                      >
+                        Manage
                       </Link>
                     </small>
                   </ListGroup.Item>

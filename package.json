@@ -10,7 +10,7 @@
     "apollo-fetch": "^0.7.0",
     "base-64": "^1.0.0",
     "bootstrap": "^4.5.3",
-    "next": "^10.0.2",
+    "next": "^10.0.3",
     "nprogress": "^0.2.0",
     "react": "17.0.1",
     "react-bootstrap": "^1.4.0",

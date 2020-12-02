@@ -1,4 +1,4 @@
-import Fetch from "../library/fetch";
+import Fetch from "../libraries/fetch";
 
 class QuizClass {
   add(param) {

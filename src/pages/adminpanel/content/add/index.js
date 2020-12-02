@@ -12,7 +12,7 @@ import {
   Row,
 } from "react-bootstrap";
 import AdminPanel from "../../../../components/adminpanel";
-import { useApplication } from "../../../../store";
+import { useApplication } from "../../../../stores";
 
 const QuillClientSide = Dynamic(import("react-quill"), {
   ssr: false,
@@ -52,7 +52,6 @@ export default function Index() {
   function addHandler() {
     setLoading(true);
     app.content.add({
-      _id: "",
       order: order,
       title: title,
       content: Base64.encode(content),

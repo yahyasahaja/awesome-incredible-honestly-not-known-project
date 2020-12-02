@@ -1,18 +1,19 @@
-import Fetch from "../library/fetch";
+import Fetch from "../libraries/fetch";
 
-class KeyFeatureClass {
+class LearningPathClass {
   add(param) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        keyfeature_add(
+        learningpath_add(
           order: "` + param.order + `",
           title: "` + param.title + `",
+          description: "` + param.description + `",
           course: "` + param.course + `",
         ) { _id }
       }`).then(result => {
         /* eslint-enable */
-        resolve(result.data.keyfeature_add._id);
+        resolve(result.data.learningpath_add._id);
       });
     });
   }
@@ -20,12 +21,12 @@ class KeyFeatureClass {
   delete(_id) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
-      Fetch(`mutation { keyfeature_delete(_id:"` + _id + `"){ _id } }`)
-      .then(() => { resolve() });
+      Fetch(`mutation { learningpath_delete(_id:"` + _id + `"){ _id } }`)
+      .then(() => { resolve(); });
       /* eslint-enable */
     });
   }
 }
 
-const KeyFeatureStore = new KeyFeatureClass();
-export default KeyFeatureStore;
+const LearningPathStore = new LearningPathClass();
+export default LearningPathStore;

@@ -10,7 +10,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import AdminPanel from "../../../components/adminpanel";
-import Fetch from "../../../library/fetch";
+import Fetch from "../../../libraries/fetch";
 
 export async function getServerSideProps() {
   /* eslint-disable */

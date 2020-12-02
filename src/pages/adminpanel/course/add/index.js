@@ -10,8 +10,8 @@ import {
   Row,
 } from "react-bootstrap";
 import AdminPanel from "../../../../components/adminpanel";
-import NewLine from "../../../../library/newline";
-import { useApplication } from "../../../../store";
+import NewLine from "../../../../libraries/newline";
+import { useApplication } from "../../../../stores";
 
 export default function Index() {
   const styles = {
@@ -26,7 +26,6 @@ export default function Index() {
   function addHandler() {
     setLoading(true);
     app.course.add({
-      _id: "",
       type: type,
       title: title,
       description: NewLine(description),

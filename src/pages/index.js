@@ -7,7 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 import YouTube from "react-youtube";
 import SortArray from "sort-objects-array";
 import Navbar from "../components/navbar";
-import Fetch from "../library/fetch";
+import Fetch from "../libraries/fetch";
 
 export async function getServerSideProps() {
   /* eslint-disable */

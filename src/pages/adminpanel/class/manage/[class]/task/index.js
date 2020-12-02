@@ -9,42 +9,37 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
-import SortArray from "sort-objects-array";
-import AdminPanel from "../../../../../components/adminpanel";
-import Fetch from "../../../../../libraries/fetch";
+import AdminPanel from "../../../../../../components/adminpanel";
+import Fetch from "../../../../../../libraries/fetch";
 
 export async function getServerSideProps(ctx) {
   /* eslint-disable */
   const results = await Fetch(`{
-    courseById(_id: "` + ctx.params.course + `") {
+    classById(_id:"` + ctx.params.class + `") {
       _id
-      title
-      quiz {
+      name
+      course {
+        _id
+      }
+      task {
         _id
         title
       }
     }
   }`).then(result => {
     /* eslint-enable */
-    const quiz = [];
-    result.data.courseById.quiz.forEach((item) => quiz.unshift(item));
-    const course = {
-      _id: result.data.courseById._id,
-      title: result.data.courseById.title,
-      quiz: quiz,
-    };
     return {
-      course: course,
+      classdata: result.data.classById,
     };
   });
   return {
     props: {
-      course: results.course,
+      classdata: results.classdata,
     },
   };
 }
 
-export default function Index({ course }) {
+export default function Index({ classdata }) {
   const styles = {
     container: { paddingTop: 12.5, paddingBottom: 12.5 },
     breadcrumb: { marginTop: -1.25 },
@@ -58,28 +53,36 @@ export default function Index({ course }) {
             <Link href="/adminpanel">Admin Panel</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item style={styles.breadcrumb}>
-            <Link href="/adminpanel/course">Course</Link>
+            <Link href="/adminpanel/class">Class</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item style={styles.breadcrumb}>
             <Link
-              href="/adminpanel/course/quiz/[course]"
-              as={"/adminpanel/course/quiz/" + course._id}
+              href="/adminpanel/class/manage/[class]"
+              as={"/adminpanel/class/manage/" + classdata._id}
             >
-              {course.title}
+              {classdata.name}
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item style={styles.breadcrumb}>
             <Link
-              href="/adminpanel/course/quiz/[course]"
-              as={"/adminpanel/course/quiz/" + course._id}
+              href="/adminpanel/class/manage/[class]"
+              as={"/adminpanel/class/manage/" + classdata._id}
             >
-              Quiz
+              Manage
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={styles.breadcrumb}>
+            <Link
+              href="/adminpanel/class/manage/[class]/task"
+              as={"/adminpanel/class/manage/" + classdata._id + "/task"}
+            >
+              Task
             </Link>
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Quiz List</b>
+            <b>Task List</b>
           </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
@@ -87,11 +90,11 @@ export default function Index({ course }) {
                 <Button
                   onClick={() =>
                     Router.push(
-                      "/adminpanel/course/quiz/" + course._id + "/add"
+                      "/adminpanel/class/manage/" + classdata._id + "/task/add"
                     )
                   }
                 >
-                  Add Quiz
+                  Add Task
                 </Button>
               </div>
               <div>
@@ -99,9 +102,9 @@ export default function Index({ course }) {
               </div>
             </div>
           </Card.Body>
-          {course.quiz.length !== 0 && (
+          {classdata.task.length !== 0 && (
             <ListGroup variant="flush">
-              {SortArray(course.quiz, "order").map((item) => {
+              {classdata.task.map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
@@ -109,15 +112,15 @@ export default function Index({ course }) {
                     </div>
                     <small>
                       <Link
-                        href="/adminpanel/course/quiz/[course]/edit/[quiz]"
+                        href="/adminpanel/class/manage/[class]/task/edit/[task]"
                         as={
-                          "/adminpanel/course/quiz/" +
-                          course._id +
-                          "/edit/" +
+                          "/adminpanel/class/manage/" +
+                          classdata._id +
+                          "/task/edit/" +
                           item._id
                         }
                       >
-                        Click here to edit
+                        Edit this task
                       </Link>
                     </small>
                   </ListGroup.Item>

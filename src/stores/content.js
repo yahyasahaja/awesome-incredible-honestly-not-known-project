@@ -1,23 +1,20 @@
-import Fetch from "../library/fetch";
+import Router from "next/router";
+import Fetch from "../libraries/fetch";
 
 class ContentClass {
   add(param) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        question_add(
+        content_add(
           order: "` + param.order + `",
-          question: "` + param.question + `",
-          answer: "` + param.answer + `",
-          a: "` + param.a + `",
-          b: "` + param.b + `",
-          c: "` + param.c + `",
-          d: "` + param.d + `",
-          quiz: "` + param.quiz + `",
+          title: "` + param.title + `",
+          content: "` + param.content + `",
         ) { _id }
       }`).then(result => {
         /* eslint-enable */
-        resolve(result.data.question_add._id);
+        Router.push("/adminpanel/content");
+        resolve(result.data.content_add._id);
       });
     });
   }
@@ -26,18 +23,15 @@ class ContentClass {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
       Fetch(`mutation {
-        question_update(
+        content_update(
           _id: "` + param._id + `",
           order: "` + param.order + `",
-          question: "` + param.question + `",
-          answer: "` + param.answer + `",
-          a: "` + param.a + `",
-          b: "` + param.b + `",
-          c: "` + param.c + `",
-          d: "` + param.d + `",
+          title: "` + param.title + `",
+          content: "` + param.content + `",
         ) { _id }
       }`).then(() => {
         /* eslint-enable */
+        Router.push("/adminpanel/content");
         resolve();
       });
     });
@@ -46,9 +40,13 @@ class ContentClass {
   delete(_id) {
     return new Promise((resolve, reject) => {
       /* eslint-disable */
-      Fetch(`mutation { question_delete(_id:"` + _id + `"){ _id } }`)
-      .then(() => { resolve() });
-      /* eslint-enable */
+      Fetch(`mutation { content_delete(_id:"` + _id + `"){ _id } }`)
+      .then(() => {
+        /* eslint-enable */
+          Router.push("/adminpanel/content");
+          resolve();
+        }
+      );
     });
   }
 }

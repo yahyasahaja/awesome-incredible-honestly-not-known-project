@@ -3,7 +3,7 @@ import { Button, Card, Container } from "react-bootstrap";
 import { CheckCircle } from "react-feather";
 import SortArray from "sort-objects-array";
 import Navbar from "../../components/navbar";
-import Fetch from "../../library/fetch";
+import Fetch from "../../libraries/fetch";
 
 export async function getServerSideProps(context) {
   /* eslint-disable */
