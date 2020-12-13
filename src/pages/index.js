@@ -65,12 +65,12 @@ function Component({ children, gray }) {
   const styles = {
     true: {
       paddingTop: 20,
-      paddingBottom: 20,
+      paddingBottom: 35,
       backgroundColor: "#F9F9F9",
     },
     false: {
       paddingTop: 20,
-      paddingBottom: 20,
+      paddingBottom: 35,
     },
   };
   return <div style={gray ? styles.true : styles.false}>{children}</div>;
@@ -197,8 +197,8 @@ function Course({ course, title, description }) {
                           </h6>
                           <small>
                             <Link
-                              href="/learn-more/[_id]"
-                              as={"/learn-more/" + child._id}
+                              href="/learnmore/[course]"
+                              as={"/learnmore/" + child._id}
                             >
                               <a>Click here to learn more</a>
                             </Link>
@@ -221,7 +221,7 @@ function ContentParser({ title, content }) {
   return (
     <Container style={{ textAlign: "justify" }}>
       <h4 style={{ marginBottom: 15 }}>{title}</h4>
-      {ReactHtmlParser(content)}
+      <div style={{ marginBottom: -20 }}>{ReactHtmlParser(content)}</div>
     </Container>
   );
 }
@@ -229,6 +229,7 @@ function ContentParser({ title, content }) {
 function Footer() {
   const styles = {
     container: {
+      marginTop: -35,
       paddingTop: 20,
       paddingBottom: 20,
       backgroundColor: "#292B2C",
@@ -245,7 +246,7 @@ function Footer() {
         {" / "}
         <a href="#!">Contact</a>
         {" / "}
-        <Link href="/adminpanel">Admin Panel</Link>
+        <Link href="/administrator">Administrator</Link>
       </div>
       <small className="text-muted">
         <div style={styles.text}>
