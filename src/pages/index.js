@@ -1,4 +1,3 @@
-import Base64 from "base-64";
 import Link from "next/link";
 import React, { Fragment, useState, useEffect } from "react";
 import { Container, Button, Row, Col, Carousel, Card } from "react-bootstrap";
@@ -6,6 +5,7 @@ import { Compass, Key } from "react-feather";
 import ReactHtmlParser from "react-html-parser";
 import YouTube from "react-youtube";
 import SortArray from "sort-objects-array";
+import { decode } from "universal-base64";
 import Navbar from "../components/navbar";
 import Fetch from "../libraries/fetch";
 
@@ -43,7 +43,7 @@ export async function getServerSideProps() {
         _id: item._id,
         order: item.order,
         title: item.title,
-        content: Base64.decode(item.content),
+        content: decode(item.content),
       });
     });
     return {

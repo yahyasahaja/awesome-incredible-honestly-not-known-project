@@ -1,4 +1,3 @@
-import Base64 from "base-64";
 import Dynamic from "next/dynamic";
 import Router from "next/router";
 import React, { Fragment, useState } from "react";
@@ -11,6 +10,7 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
+import { decode, encode } from "universal-base64";
 import Administrator from "../../../../../components/administrator";
 import Fetch from "../../../../../libraries/fetch";
 import { useAdministrator } from "../../../../../stores/administrator";
@@ -30,7 +30,7 @@ export async function getServerSideProps(ctx) {
       _id: result.data.contentById._id,
       order: result.data.contentById.order,
       title: result.data.contentById.title,
-      content: Base64.decode(result.data.contentById.content),
+      content: decode(result.data.contentById.content),
     };
     return {
       content: content,
@@ -84,7 +84,7 @@ export default function Index({ data }) {
       _id: data._id,
       order: order,
       title: title,
-      content: Base64.encode(content),
+      content: encode(content),
     });
   }
   function deleteHandler() {

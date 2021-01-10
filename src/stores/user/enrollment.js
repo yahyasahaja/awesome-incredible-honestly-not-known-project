@@ -11,11 +11,26 @@ class EnrollmentClass {
           user: "` + SessionStore.data._id + `",
           course: "` + param + `",
           class: "",
+          materi: "0",
           status: "0"
         ) { _id }
       }`).then(() => {
         resolve();
         Router.push("/user/learn/status");
+      });
+    });
+  }
+
+  progressModule(param) {
+    return new Promise((resolve, reject) => {
+      /* eslint-disable */
+      Fetch(`mutation {
+        enrollment_materi(
+          _id: "` + param._id + `",
+          materi: "` + param.materi + `",
+        ){ _id }
+      }`).then(() => {
+        resolve();
       });
     });
   }

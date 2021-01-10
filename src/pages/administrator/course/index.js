@@ -120,6 +120,13 @@ export default function Index({ course }) {
                       >
                         Quiz
                       </Link>
+                      {" / "}
+                      <Link
+                        href="/administrator/course/module/[course]"
+                        as={"/administrator/course/module/" + item._id}
+                      >
+                        Module
+                      </Link>
                     </small>
                   </ListGroup.Item>
                 );

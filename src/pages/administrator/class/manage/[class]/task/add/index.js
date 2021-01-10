@@ -1,8 +1,8 @@
-import Base64 from "base-64";
 import Dynamic from "next/dynamic";
 import Router from "next/router";
 import React, { Fragment, useState } from "react";
 import { Breadcrumb, Button, Card, Container, Form } from "react-bootstrap";
+import { encode } from "universal-base64";
 import Administrator from "../../../../../../../components/administrator";
 import Fetch from "../../../../../../../libraries/fetch";
 import { useAdministrator } from "../../../../../../../stores/administrator";
@@ -65,7 +65,7 @@ export default function Index({ classdata }) {
     setLoading(true);
     app.task.add({
       title: title,
-      description: Base64.encode(description),
+      description: encode(description),
       class: classdata._id,
     });
   }

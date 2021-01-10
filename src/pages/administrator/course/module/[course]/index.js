@@ -9,6 +9,7 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
+import SortArray from "sort-objects-array";
 import Administrator from "../../../../../components/administrator";
 import Fetch from "../../../../../libraries/fetch";
 
@@ -18,19 +19,18 @@ export async function getServerSideProps(ctx) {
     courseById(_id: "` + ctx.params.course + `") {
       _id
       title
-      quiz {
+      bab {
         _id
-        title
+        name
+        order
       }
     }
   }`).then(result => {
     /* eslint-enable */
-    const quiz = [];
-    result.data.courseById.quiz.forEach((item) => quiz.unshift(item));
     const course = {
       _id: result.data.courseById._id,
       title: result.data.courseById.title,
-      quiz: quiz,
+      bab: result.data.courseById.bab,
     };
     return {
       course: course,
@@ -68,7 +68,7 @@ export default function Index({ course }) {
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/course/quiz/" + course._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
             {course.title}
@@ -76,15 +76,15 @@ export default function Index({ course }) {
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/course/quiz/" + course._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
-            Quiz
+            Module
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Quiz List</b>
+            <b>BAB List</b>
           </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
@@ -92,11 +92,11 @@ export default function Index({ course }) {
                 <Button
                   onClick={() =>
                     Router.push(
-                      "/administrator/course/quiz/" + course._id + "/add"
+                      "/administrator/course/module/" + course._id + "/add"
                     )
                   }
                 >
-                  Add Quiz
+                  Add BAB
                 </Button>
               </div>
               <div>
@@ -104,25 +104,37 @@ export default function Index({ course }) {
               </div>
             </div>
           </Card.Body>
-          {course.quiz.length !== 0 && (
+          {course.bab.length !== 0 && (
             <ListGroup variant="flush">
-              {course.quiz.map((item) => {
+              {SortArray(course.bab, "order").map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
-                      <b>{item.title}</b>
+                      <b>{item.order + ". " + item.name}</b>
                     </div>
                     <small>
                       <Link
-                        href="/administrator/course/quiz/[course]/edit/[quiz]"
+                        href="/administrator/course/module/[course]/edit/[bab]"
                         as={
-                          "/administrator/course/quiz/" +
+                          "/administrator/course/module/" +
                           course._id +
                           "/edit/" +
                           item._id
                         }
                       >
-                        Click here to edit
+                        Edit
+                      </Link>
+                      {" / "}
+                      <Link
+                        href="/administrator/course/module/[course]/materi/[bab]"
+                        as={
+                          "/administrator/course/module/" +
+                          course._id +
+                          "/materi/" +
+                          item._id
+                        }
+                      >
+                        Materi
                       </Link>
                     </small>
                   </ListGroup.Item>

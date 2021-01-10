@@ -9,8 +9,9 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
-import Administrator from "../../../../../components/administrator";
-import Fetch from "../../../../../libraries/fetch";
+import SortArray from "sort-objects-array";
+import Administrator from "../../../../../../../components/administrator";
+import Fetch from "../../../../../../../libraries/fetch";
 
 export async function getServerSideProps(ctx) {
   /* eslint-disable */
@@ -18,32 +19,41 @@ export async function getServerSideProps(ctx) {
     courseById(_id: "` + ctx.params.course + `") {
       _id
       title
-      quiz {
+    }
+    babById(_id:"` + ctx.params.bab + `") {
+      _id
+      name
+      materi {
         _id
-        title
+        name
+        order
       }
     }
   }`).then(result => {
     /* eslint-enable */
-    const quiz = [];
-    result.data.courseById.quiz.forEach((item) => quiz.unshift(item));
     const course = {
       _id: result.data.courseById._id,
       title: result.data.courseById.title,
-      quiz: quiz,
+    };
+    const bab = {
+      _id: result.data.babById._id,
+      name: result.data.babById.name,
+      materi: result.data.babById.materi,
     };
     return {
       course: course,
+      bab: bab,
     };
   });
   return {
     props: {
       course: results.course,
+      bab: results.bab,
     },
   };
 }
 
-export default function Index({ course }) {
+export default function Index({ course, bab }) {
   const styles = {
     container: { paddingTop: 12.5, paddingBottom: 12.5 },
     breadcrumb: { marginTop: -1.25 },
@@ -68,7 +78,7 @@ export default function Index({ course }) {
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/course/quiz/" + course._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
             {course.title}
@@ -76,15 +86,41 @@ export default function Index({ course }) {
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/course/quiz/" + course._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
-            Quiz
+            Module
+          </Breadcrumb.Item>
+          <Breadcrumb.Item
+            style={styles.breadcrumb}
+            onClick={() =>
+              Router.push(
+                "/administrator/course/module/" +
+                  course._id +
+                  "/materi/" +
+                  bab._id
+              )
+            }
+          >
+            {bab.name}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item
+            style={styles.breadcrumb}
+            onClick={() =>
+              Router.push(
+                "/administrator/course/module/" +
+                  course._id +
+                  "/materi/" +
+                  bab._id
+              )
+            }
+          >
+            Materi
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Quiz List</b>
+            <b>Materi List</b>
           </Card.Header>
           <Card.Body>
             <div className="d-flex justify-content-between">
@@ -92,11 +128,15 @@ export default function Index({ course }) {
                 <Button
                   onClick={() =>
                     Router.push(
-                      "/administrator/course/quiz/" + course._id + "/add"
+                      "/administrator/course/module/" +
+                        course._id +
+                        "/materi/" +
+                        bab._id +
+                        "/add"
                     )
                   }
                 >
-                  Add Quiz
+                  Add Materi
                 </Button>
               </div>
               <div>
@@ -104,20 +144,22 @@ export default function Index({ course }) {
               </div>
             </div>
           </Card.Body>
-          {course.quiz.length !== 0 && (
+          {bab.materi.length !== 0 && (
             <ListGroup variant="flush">
-              {course.quiz.map((item) => {
+              {SortArray(bab.materi, "order").map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
-                      <b>{item.title}</b>
+                      <b>{item.order + ". " + item.name}</b>
                     </div>
                     <small>
                       <Link
-                        href="/administrator/course/quiz/[course]/edit/[quiz]"
+                        href="/administrator/course/module/[course]/materi/[bab]/edit/[materi]"
                         as={
-                          "/administrator/course/quiz/" +
+                          "/administrator/course/module/" +
                           course._id +
+                          "/materi/" +
+                          bab._id +
                           "/edit/" +
                           item._id
                         }

@@ -96,14 +96,6 @@ export default function Index({ classdata }) {
           </Breadcrumb.Item>
         </Breadcrumb>
         <Row>
-          <Col xs={9}>
-            <Card>
-              <Card.Header>
-                <b>Class Activity</b>
-              </Card.Header>
-              <Card.Body></Card.Body>
-            </Card>
-          </Col>
           <Col xs={3}>
             <CardMenu
               title={classdata.task.length + " Task"}
@@ -112,7 +104,8 @@ export default function Index({ classdata }) {
               link="Manage Task"
               icon={<Edit size={iconsize} />}
             />
-            <br />
+          </Col>
+          <Col xs={3}>
             <CardMenu
               title={classdata.enrollment.length + " Student"}
               href="/administrator/class/manage/[class]/student"

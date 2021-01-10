@@ -68,7 +68,11 @@ export default function Index() {
           <ListGroup variant="flush">
             {data.map((item) => {
               return (
-                <ListGroup.Item action key={item._id}>
+                <ListGroup.Item
+                  action
+                  key={item._id}
+                  onClick={() => Router.push("/user/learn/class/" + item._id)}
+                >
                   <div>
                     <b>{item.class[0].name}</b>
                     {" " + item.course[0].title}

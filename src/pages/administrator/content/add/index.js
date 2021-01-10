@@ -1,4 +1,3 @@
-import Base64 from "base-64";
 import Dynamic from "next/dynamic";
 import Router from "next/router";
 import React, { Fragment, useState } from "react";
@@ -11,6 +10,7 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
+import { encode } from "universal-base64";
 import Administrator from "../../../../components/administrator";
 import { useAdministrator } from "../../../../stores/administrator";
 
@@ -54,7 +54,7 @@ export default function Index() {
     app.content.add({
       order: order,
       title: title,
-      content: Base64.encode(content),
+      content: encode(content),
     });
   }
   return (

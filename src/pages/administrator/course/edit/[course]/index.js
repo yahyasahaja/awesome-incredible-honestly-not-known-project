@@ -31,6 +31,9 @@ export async function getServerSideProps(ctx) {
       quiz {
         _id
       }
+      bab {
+        _id
+      }
       class {
         _id
       }
@@ -173,6 +176,7 @@ export default function Index({ course }) {
                 course.learningpath.length !== 0 ||
                 course.keyfeature.length !== 0 ||
                 course.quiz.length !== 0 ||
+                course.bab.length !== 0 ||
                 course.class.length !== 0 ||
                 course.enrollment.length !== 0
               }

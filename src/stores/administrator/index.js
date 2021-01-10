@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
+import Bab from "./bab";
 import Class from "./class";
 import Content from "./content";
 import Course from "./course";
 import KeyFeature from "./keyfeature";
 import LearningPath from "./learningpath";
+import Materi from "./materi";
 import Question from "./question";
 import Quiz from "./quiz";
 import Task from "./task";
@@ -17,6 +19,8 @@ class AdministratorClass {
   learningpath = LearningPath;
   question = Question;
   quiz = Quiz;
+  bab = Bab;
+  materi = Materi;
   task = Task;
   user = User;
 }

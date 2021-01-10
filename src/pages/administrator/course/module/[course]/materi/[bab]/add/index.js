@@ -2,41 +2,10 @@ import Dynamic from "next/dynamic";
 import Router from "next/router";
 import React, { Fragment, useState } from "react";
 import { Breadcrumb, Button, Card, Container, Form } from "react-bootstrap";
-import { decode, encode } from "universal-base64";
+import { encode } from "universal-base64";
 import Administrator from "../../../../../../../../components/administrator";
 import Fetch from "../../../../../../../../libraries/fetch";
 import { useAdministrator } from "../../../../../../../../stores/administrator";
-
-export async function getServerSideProps(ctx) {
-  /* eslint-disable */
-  const results = await Fetch(`{
-    classById(_id:"` + ctx.params.class + `") {
-      _id
-      name
-    }
-    taskById(_id:"` + ctx.params.task + `") {
-      _id
-      title
-      description
-    }
-  }`).then(result => {
-    /* eslint-enable */
-    return {
-      classdata: result.data.classById,
-      task: {
-        _id: result.data.taskById._id,
-        title: result.data.taskById.title,
-        description: decode(result.data.taskById.description),
-      },
-    };
-  });
-  return {
-    props: {
-      classdata: results.classdata,
-      task: results.task,
-    },
-  };
-}
 
 const QuillClientSide = Dynamic(import("react-quill"), {
   ssr: false,
@@ -63,29 +32,64 @@ const quillmodules = {
   },
 };
 
-export default function Index({ classdata, task }) {
+export async function getServerSideProps(ctx) {
+  /* eslint-disable */
+  const results = await Fetch(`{
+    courseById(_id: "` + ctx.params.course + `") {
+      _id
+      title
+    }
+    babById(_id:"` + ctx.params.bab + `") {
+      _id
+      name
+    }
+  }`).then(result => {
+    /* eslint-enable */
+    const course = {
+      _id: result.data.courseById._id,
+      title: result.data.courseById.title,
+    };
+    const bab = {
+      _id: result.data.babById._id,
+      name: result.data.babById.name,
+    };
+    return {
+      course: course,
+      bab: bab,
+    };
+  });
+  return {
+    props: {
+      course: results.course,
+      bab: results.bab,
+    },
+  };
+}
+
+export default function Index({ course, bab }) {
   const styles = {
     container: { paddingTop: 12.5, paddingBottom: 12.5 },
     breadcrumb: { marginTop: -1.25 },
   };
   const app = useAdministrator();
-  const [title, setTitle] = useState(task.title);
-  const [description, setDescription] = useState(task.description);
+  const [order, setOrder] = useState("1");
+  const [name, setName] = useState("");
+  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  function saveHandler() {
+  function addHandler() {
     setLoading(true);
-    app.task.update(
-      {
-        _id: task._id,
-        title: title,
-        description: encode(description),
-      },
-      classdata._id
-    );
-  }
-  function deleteHandler() {
-    setLoading(true);
-    app.task.delete(task._id, classdata._id);
+    app.materi
+      .add({
+        name: name,
+        order: order,
+        content: encode(content),
+        bab: bab._id,
+      })
+      .then(() => {
+        Router.push(
+          "/administrator/course/module/" + course._id + "/materi/" + bab._id
+        );
+      });
   }
   return (
     <Fragment>
@@ -100,103 +104,109 @@ export default function Index({ classdata, task }) {
           </Breadcrumb.Item>
           <Breadcrumb.Item
             style={styles.breadcrumb}
-            onClick={() => Router.push("/administrator/class")}
+            onClick={() => Router.push("/administrator/course")}
           >
-            Class
+            Course
           </Breadcrumb.Item>
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/class/manage/" + classdata._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
-            {classdata.name}
+            {course.title}
           </Breadcrumb.Item>
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
-              Router.push("/administrator/class/manage/" + classdata._id)
+              Router.push("/administrator/course/module/" + course._id)
             }
           >
-            Manage
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            style={styles.breadcrumb}
-            onClick={() =>
-              Router.push(
-                "/administrator/class/manage/" + classdata._id + "/task"
-              )
-            }
-          >
-            Task
+            Module
           </Breadcrumb.Item>
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
               Router.push(
-                "/administrator/class/manage/" +
-                  classdata._id +
-                  "/task/edit/" +
-                  task._id
+                "/administrator/course/module/" +
+                  course._id +
+                  "/materi/" +
+                  bab._id
               )
             }
           >
-            {task.title}
+            {bab.name}
           </Breadcrumb.Item>
           <Breadcrumb.Item
             style={styles.breadcrumb}
             onClick={() =>
               Router.push(
-                "/administrator/class/manage/" +
-                  classdata._id +
-                  "/task/edit/" +
-                  task._id
+                "/administrator/course/module/" +
+                  course._id +
+                  "/materi/" +
+                  bab._id
               )
             }
           >
-            Edit
+            Materi
+          </Breadcrumb.Item>
+          <Breadcrumb.Item
+            style={styles.breadcrumb}
+            onClick={() =>
+              Router.push(
+                "/administrator/course/module/" +
+                  course._id +
+                  "/materi/" +
+                  bab._id +
+                  "/add"
+              )
+            }
+          >
+            Add
           </Breadcrumb.Item>
         </Breadcrumb>
         <Card>
           <Card.Header>
-            <b>Edit Task</b>
+            <b>Add Materi</b>
           </Card.Header>
           <Card.Body>
             <Form>
               <Form.Group>
-                <Form.Label>Title</Form.Label>
+                <Form.Label>Order</Form.Label>
                 <Form.Control
-                  value={title}
+                  type="number"
+                  min={1}
                   disabled={loading}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Homework 1"
+                  value={order}
+                  onChange={(e) => setOrder(e.target.value)}
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Description</Form.Label>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  value={name}
+                  disabled={loading}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. What Is Simplilearn?"
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Content</Form.Label>
                 <QuillClientSide
                   theme="snow"
                   modules={quillmodules}
-                  value={description}
-                  onChange={setDescription}
-                  placeholder="Write your description here..."
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Write your content here..."
                   readOnly={loading}
                 />
               </Form.Group>
               <hr />
               <Button
-                disabled={loading || title === "" || description === ""}
-                onClick={() => saveHandler()}
-                style={{ marginRight: 10 }}
+                disabled={loading || name === "" || content === ""}
+                onClick={() => addHandler()}
               >
-                Save Changes
-              </Button>
-              <Button
-                variant="danger"
-                disabled={loading}
-                onClick={() => deleteHandler()}
-              >
-                Delete Task
+                Add Materi
               </Button>
             </Form>
           </Card.Body>
