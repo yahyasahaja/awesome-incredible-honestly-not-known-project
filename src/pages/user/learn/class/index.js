@@ -26,6 +26,9 @@ export default function Index() {
                 class {
                   _id
                   name
+                  instructor {
+                    name
+                  }
                 }
                 course {
                   type
@@ -76,6 +79,9 @@ export default function Index() {
                   <div>
                     <b>{item.class[0].name}</b>
                     {" " + item.course[0].title}
+                  </div>
+                  <div>
+                    Instructed by <b>{item.class[0].instructor[0].name}</b>
                   </div>
                   <div>
                     {item.course[0].type === "postgraduate"

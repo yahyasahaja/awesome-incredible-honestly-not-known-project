@@ -25,6 +25,7 @@ export async function getServerSideProps(ctx) {
     }
     quizById(_id:"` + ctx.params.quiz + `") {
       _id
+      order
       title
       question {
         _id
@@ -58,7 +59,8 @@ export default function Index({ course, quiz }) {
     breadcrumb: { marginTop: -1.25 },
   };
   const app = useAdministrator();
-  const [title, setTitle] = useState(quiz.title);
+  const [quizOrder, setQuizOrder] = useState(quiz.order);
+  const [quizTitle, setQuizTitle] = useState(quiz.title);
   const [order, setOrder] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -73,7 +75,8 @@ export default function Index({ course, quiz }) {
     app.quiz
       .update({
         _id: quiz._id,
-        title: title,
+        order: quizOrder,
+        title: quizTitle,
       })
       .then(() => {
         Router.push("/administrator/course/quiz/" + course._id);
@@ -213,9 +216,18 @@ export default function Index({ course, quiz }) {
                   <h5>Quiz Data :</h5>
                 </Form.Label>
                 <Form.Control
+                  type="number"
+                  placeholder="Order"
+                  value={quizOrder}
+                  onChange={(e) => setQuizOrder(e.target.value)}
+                  disabled={loading}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Control
                   placeholder="Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={quizTitle}
+                  onChange={(e) => setQuizTitle(e.target.value)}
                   disabled={loading}
                 />
               </Form.Group>
@@ -228,7 +240,7 @@ export default function Index({ course, quiz }) {
                     <div style={{ textAlign: "justify", marginLeft: 15 }}>
                       {item.question}
                     </div>
-                    <div style={{ marginLeft: 20 }}>
+                    <div style={{ marginLeft: 15 }}>
                       Answer: <b>{item.answer.toUpperCase()}</b> /{" "}
                       <a href="#!" onClick={() => editQuestionHandler(item)}>
                         Edit
@@ -402,7 +414,7 @@ export default function Index({ course, quiz }) {
                 Add Question
               </Button>
               <Button
-                disabled={loading || title === ""}
+                disabled={loading || quizOrder === "" || quizTitle === ""}
                 onClick={() => saveHandler()}
                 style={{ marginRight: 10 }}
               >

@@ -7,6 +7,7 @@ class TaskClass {
       /* eslint-disable */
       Fetch(`mutation {
         task_add(
+          order: "` + param.order + `",
           title: "` + param.title + `",
           description: "` + param.description + `",
           class: "` + param.class + `",
@@ -25,6 +26,7 @@ class TaskClass {
       Fetch(`mutation {
         task_update(
           _id: "` + param._id + `",
+          order: "` + param.order + `",
           title: "` + param.title + `",
           description: "` + param.description + `",
         ) { _id }

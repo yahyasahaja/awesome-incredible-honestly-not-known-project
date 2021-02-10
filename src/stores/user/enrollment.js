@@ -12,9 +12,12 @@ class EnrollmentClass {
           course: "` + param + `",
           class: "",
           materi: "0",
+          task: [],
+          quiz: [],
           status: "0"
         ) { _id }
       }`).then(() => {
+        /* eslint-enable */
         resolve();
         Router.push("/user/learn/status");
       });
@@ -30,6 +33,37 @@ class EnrollmentClass {
           materi: "` + param.materi + `",
         ){ _id }
       }`).then(() => {
+        /* eslint-enable */
+        resolve();
+      });
+    });
+  }
+
+  progressTask(param) {
+    return new Promise((resolve, reject) => {
+      /* eslint-disable */
+      Fetch(`mutation {
+        enrollment_task(
+          _id: "` + param._id + `",
+          task: ` + param.task + `,
+        ){ _id }
+      }`).then(() => {
+        /* eslint-enable */
+        resolve();
+      });
+    });
+  }
+
+  progressQuiz(param) {
+    return new Promise((resolve, reject) => {
+      /* eslint-disable */
+      Fetch(`mutation {
+        enrollment_quiz(
+          _id: "` + param._id + `",
+          quiz: ` + param.quiz + `,
+        ){ _id }
+      }`).then(() => {
+        /* eslint-enable */
         resolve();
       });
     });

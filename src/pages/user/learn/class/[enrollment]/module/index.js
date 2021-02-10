@@ -167,9 +167,10 @@ export default function Index({ enrollment, classdata, moduledata, progress }) {
                   <Button
                     block
                     disabled={loading || active.progress <= now}
+                    variant={active.progress <= now ? "success" : "primary"}
                     onClick={() => progressHandler()}
                   >
-                    Done
+                    {active.progress <= now ? "Done" : "Mask As Done"}
                   </Button>
                 </Card.Body>
               )}

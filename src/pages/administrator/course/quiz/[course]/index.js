@@ -9,6 +9,7 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
+import SortArray from "sort-objects-array";
 import Administrator from "../../../../../components/administrator";
 import Fetch from "../../../../../libraries/fetch";
 
@@ -20,17 +21,16 @@ export async function getServerSideProps(ctx) {
       title
       quiz {
         _id
+        order
         title
       }
     }
   }`).then(result => {
     /* eslint-enable */
-    const quiz = [];
-    result.data.courseById.quiz.forEach((item) => quiz.unshift(item));
     const course = {
       _id: result.data.courseById._id,
       title: result.data.courseById.title,
-      quiz: quiz,
+      quiz: result.data.courseById.quiz,
     };
     return {
       course: course,
@@ -106,11 +106,11 @@ export default function Index({ course }) {
           </Card.Body>
           {course.quiz.length !== 0 && (
             <ListGroup variant="flush">
-              {course.quiz.map((item) => {
+              {SortArray(course.quiz, "order").map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
-                      <b>{item.title}</b>
+                      <b>{item.order + ". " + item.title}</b>
                     </div>
                     <small>
                       <Link

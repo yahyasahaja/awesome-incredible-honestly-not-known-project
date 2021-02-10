@@ -9,6 +9,7 @@ class ClassClass {
         class_add(
           name: "` + param.name + `",
           course: "` + param.course + `",
+          instructor: "` + param.instructor + `",
         ) { _id }
       }`).then(result => {
         /* eslint-enable */
@@ -26,6 +27,7 @@ class ClassClass {
           _id: "` + param._id + `",
           name: "` + param.name + `",
           course: "` + param.course + `",
+          instructor: "` + param.instructor + `",
         ) { _id }
       }`).then(() => {
         /* eslint-enable */

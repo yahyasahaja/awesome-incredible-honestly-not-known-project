@@ -7,7 +7,7 @@ import Administrator from "../../components/administrator";
 
 function CardMenu({ title, href, link, icon }) {
   return (
-    <Card>
+    <Card style={{ marginBottom: 15 }}>
       <Card.Body>
         <Row>
           <Col xs={2}>{icon}</Col>
@@ -44,14 +44,6 @@ export default function Index() {
         <Row>
           <Col xs={3}>
             <CardMenu
-              title="Course"
-              href="/administrator/course"
-              link="Manage Course"
-              icon={<Book size={iconsize} />}
-            />
-          </Col>
-          <Col xs={3}>
-            <CardMenu
               title="Content"
               href="/administrator/content"
               link="Manage Content"
@@ -60,10 +52,26 @@ export default function Index() {
           </Col>
           <Col xs={3}>
             <CardMenu
+              title="Course"
+              href="/administrator/course"
+              link="Manage Course"
+              icon={<Book size={iconsize} />}
+            />
+          </Col>
+          <Col xs={3}>
+            <CardMenu
               title="Class"
               href="/administrator/class"
               link="Manage Class"
               icon={<Grid size={iconsize} />}
+            />
+          </Col>
+          <Col xs={3}>
+            <CardMenu
+              title="Instructor"
+              href="/administrator/instructor"
+              link="Manage Instructor"
+              icon={<Users size={iconsize} />}
             />
           </Col>
           <Col xs={3}>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { Fragment } from "react";
 import { Card, Col, Container, Row, ProgressBar } from "react-bootstrap";
-import { Edit, Layers, Users } from "react-feather";
+import { Edit, Layers, User, Users } from "react-feather";
 import Navbar from "../../../../../components/navbar";
 import Fetch from "../../../../../libraries/fetch";
 
@@ -18,6 +18,16 @@ export async function getServerSideProps(ctx) {
               _id
             }
           }
+          quiz {
+            _id
+          }
+        }
+        instructor {
+          name
+          email
+        }
+        task {
+          _id
         }
       }
       course {
@@ -26,26 +36,40 @@ export async function getServerSideProps(ctx) {
         description
       }
       materi
+      task {
+        _id
+      }
+      quiz {
+        _id
+      }
     }
   }`).then(result => {
     /* eslint-enable */
-    let total = 0;
+    let materitotal = 0;
     result.data.enrollmentById.class[0].course[0].bab.forEach((bab) => {
-      total = total + bab.materi.length;
+      materitotal = materitotal + bab.materi.length;
     });
     return {
       enrollment: ctx.params.enrollment,
       class: {
         _id: result.data.enrollmentById.class[0]._id,
         name: result.data.enrollmentById.class[0].name,
+        instructor: {
+          name: result.data.enrollmentById.class[0].instructor[0].name,
+          email: result.data.enrollmentById.class[0].instructor[0].email,
+        },
       },
       course: {
         _id: result.data.enrollmentById.course[0]._id,
         title: result.data.enrollmentById.course[0].title,
         description: result.data.enrollmentById.course[0].description,
       },
-      progress: parseInt(result.data.enrollmentById.materi),
-      total: total,
+      materiprogress: parseInt(result.data.enrollmentById.materi),
+      taskprogress: result.data.enrollmentById.task.length,
+      quizprogress: result.data.enrollmentById.quiz.length,
+      materitotal: materitotal,
+      tasktotal: result.data.enrollmentById.class[0].task.length,
+      quiztotal: result.data.enrollmentById.class[0].course[0].quiz.length,
     };
   });
   return {
@@ -53,8 +77,12 @@ export async function getServerSideProps(ctx) {
       enrollment: results.enrollment,
       classdata: results.class,
       course: results.course,
-      progress: results.progress,
-      total: results.total,
+      materiprogress: results.materiprogress,
+      taskprogress: results.taskprogress,
+      quizprogress: results.quizprogress,
+      materitotal: results.materitotal,
+      tasktotal: results.tasktotal,
+      quiztotal: results.quiztotal,
     },
   };
 }
@@ -65,7 +93,7 @@ function CardMenu({ title, href, link, icon }) {
       <Card.Body>
         <Row>
           <Col xs={2}>{icon}</Col>
-          <Col xs={10} style={{ paddingLeft: 25 }}>
+          <Col xs={10} style={{ paddingLeft: 14 }}>
             <div>
               <b>{title}</b>
             </div>
@@ -81,8 +109,12 @@ export default function Index({
   enrollment,
   classdata,
   course,
-  progress,
-  total,
+  materiprogress,
+  taskprogress,
+  quizprogress,
+  materitotal,
+  tasktotal,
+  quiztotal,
 }) {
   const iconsize = 40;
   return (
@@ -91,7 +123,7 @@ export default function Index({
       <br />
       <Container>
         <Row>
-          <Col xs={9}>
+          <Col xs={8}>
             <Card>
               <Card.Header>
                 <b>
@@ -99,16 +131,55 @@ export default function Index({
                 </b>
               </Card.Header>
               <Card.Body>
-                {course.description}
-                <hr />
+                <div style={{ marginBottom: 15 }}>{course.description}</div>
                 <ProgressBar
-                  now={(progress / total) * 100}
-                  label={`${(progress / total) * 100}%`}
+                  now={(materiprogress / materitotal) * 100}
+                  label={`Module ${(materiprogress / materitotal) * 100}%`}
+                  style={{ marginBottom: 15 }}
+                />
+                <ProgressBar
+                  now={(taskprogress / tasktotal) * 100}
+                  label={`Task ${(taskprogress / tasktotal) * 100}%`}
+                  style={{ marginBottom: 15 }}
+                />
+                <ProgressBar
+                  now={(quizprogress / quiztotal) * 100}
+                  label={`Quiz ${(quizprogress / quiztotal) * 100}%`}
+                  style={{ marginBottom: 15 }}
+                />
+                <ProgressBar
+                  variant="success"
+                  now={
+                    ((materiprogress + taskprogress + quizprogress) /
+                      (materitotal + tasktotal + quiztotal)) *
+                    100
+                  }
+                  label={`Overall ${
+                    ((materiprogress + taskprogress + quizprogress) /
+                      (materitotal + tasktotal + quiztotal)) *
+                    100
+                  }%`}
                 />
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={3}>
+          <Col xs={4}>
+            <Card>
+              <Card.Body>
+                <Row>
+                  <Col xs={2}>
+                    <User size={iconsize} />
+                  </Col>
+                  <Col xs={10} style={{ paddingLeft: 12 }}>
+                    <div>
+                      <b>{classdata.instructor.name}</b>
+                    </div>
+                    <div>{classdata.instructor.email}</div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+            <br />
             <CardMenu
               title="Module"
               href={"/user/learn/class/" + enrollment + "/module"}
@@ -119,14 +190,14 @@ export default function Index({
             <CardMenu
               title="Task"
               href={"/user/learn/class/" + enrollment + "/task"}
-              link="Submit Task"
+              link="See All Tasks"
               icon={<Edit size={iconsize} />}
             />
             <br />
             <CardMenu
               title="Quiz"
               href={"/user/learn/class/" + enrollment + "/quiz"}
-              link="Take Quiz"
+              link="See All Quizzes"
               icon={<Edit size={iconsize} />}
             />
             <br />

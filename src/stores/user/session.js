@@ -46,12 +46,14 @@ class SessionClass {
               password: "` + param.password + `"
             ){ _id }
           }`).then(() => {
-            resolve(null);
-            Router.push("/user/login")
-          })
+            /* eslint-enable */
+              resolve(null);
+              Router.push("/user/login");
+            });
+          }
         }
-      })
-    })
+      );
+    });
   }
 
   logout() {

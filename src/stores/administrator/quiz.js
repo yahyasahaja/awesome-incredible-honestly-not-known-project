@@ -6,6 +6,7 @@ class QuizClass {
       /* eslint-disable */
       Fetch(`mutation {
         quiz_add(
+          order: "` + param.order + `",
           title: "` + param.title + `",
           course: "` + param.course + `",
         ) { _id }
@@ -22,6 +23,7 @@ class QuizClass {
       Fetch(`mutation {
         quiz_update(
           _id: "` + param._id + `",
+          order: "` + param.order + `",
           title: "` + param.title + `",
         ) { _id }
       }`).then((result) => {

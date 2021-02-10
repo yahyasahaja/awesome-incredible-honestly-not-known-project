@@ -1,6 +1,7 @@
-import Link from "next/link";
+import Router from "next/router";
 import React, { Fragment } from "react";
-import { Card, Container, Row, Button, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import SortArray from "sort-objects-array";
 import Navbar from "../../../../../../components/navbar";
 import Fetch from "../../../../../../libraries/fetch";
 
@@ -13,8 +14,12 @@ export async function getServerSideProps(ctx) {
         name
         task {
           _id
+          order
           title
         }
+      }
+      task {
+        _id
       }
     }
   }`).then(result => {
@@ -24,8 +29,9 @@ export async function getServerSideProps(ctx) {
       class: {
         _id: result.data.enrollmentById.class[0]._id,
         name: result.data.enrollmentById.class[0].name,
+        task: result.data.enrollmentById.class[0].task,
       },
-      task: result.data.enrollmentById.class[0].task,
+      task: result.data.enrollmentById.task,
     };
   });
   return {
@@ -38,6 +44,16 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Index({ enrollment, classdata, task }) {
+  function checkStatus(param) {
+    const check = task.filter((item) => {
+      return item._id === param;
+    });
+    if (check.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   return (
     <Fragment>
       <Navbar />
@@ -50,27 +66,28 @@ export default function Index({ enrollment, classdata, task }) {
         </Card>
         <br />
         <Row>
-          {task.map((item) => {
+          {SortArray(classdata.task, "order").map((item) => {
             return (
               <Col xs={3} key={item._id}>
                 <Card>
                   <Card.Body>
-                    <h5>{item.title}</h5>
-                    <h6>
-                      <Link
-                        href="/user/learn/class/[enrollment]/task/[task]"
-                        as={
-                          "/user/learn/class/" +
-                          enrollment +
-                          "/task/" +
-                          item._id
-                        }
-                      >
-                        Read Description
-                      </Link>
-                    </h6>
+                    <h5>{item.order + ". " + item.title}</h5>
+                    <h6>Status : {checkStatus(item._id) ? "Done" : "-"}</h6>
                     <hr />
-                    <Button block>Submit Task</Button>
+                    <Button
+                      block
+                      variant={checkStatus(item._id) ? "success" : "primary"}
+                      onClick={() =>
+                        Router.push(
+                          "/user/learn/class/" +
+                            enrollment +
+                            "/task/" +
+                            item._id
+                        )
+                      }
+                    >
+                      Read Task
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>

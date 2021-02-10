@@ -19,22 +19,25 @@ class ProfileClass {
             .then(isExist => {
               /* eslint-enable */
                 if (isExist.data.userByParam === null) {
-                /* eslint-disable */
+                  /* eslint-disable */
                 resolve(null);
-              } else {
+                /* eslint-enable */
+                } else {
                 reject(1); // eslint-disable-line
+                }
               }
-            })
+            );
           }
         }
-      })
-    })
+      });
+    });
   }
+
   update(param) {
     return new Promise((resolve, reject) => {
       this.check(param)
-      .then(() => {
-        /* eslint-disable */
+        .then(() => {
+          /* eslint-disable */
         Fetch(`mutation {
           user_update(
             _id: "` + SessionStore.data._id + `",

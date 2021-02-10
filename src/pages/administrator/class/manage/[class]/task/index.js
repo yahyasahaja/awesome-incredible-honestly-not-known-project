@@ -9,6 +9,7 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
+import SortArray from "sort-objects-array";
 import Administrator from "../../../../../../components/administrator";
 import Fetch from "../../../../../../libraries/fetch";
 
@@ -20,6 +21,7 @@ export async function getServerSideProps(ctx) {
       name
       task {
         _id
+        order
         title
       }
     }
@@ -111,11 +113,11 @@ export default function Index({ classdata }) {
           </Card.Body>
           {classdata.task.length !== 0 && (
             <ListGroup variant="flush">
-              {classdata.task.map((item) => {
+              {SortArray(classdata.task, "order").map((item) => {
                 return (
                   <ListGroup.Item action key={item._id}>
                     <div>
-                      <b>{item.title}</b>
+                      <b>{item.order + ". " + item.title}</b>
                     </div>
                     <small>
                       <Link

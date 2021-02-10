@@ -23,6 +23,9 @@ export async function getServerSideProps() {
         type
         title
       }
+      instructor {
+        name
+      }
     }
   }`).then(result => {
     /* eslint-enable */
@@ -88,13 +91,17 @@ export default function Index({ allClass }) {
                         {item.name} / {item.course[0].title}
                       </b>
                     </div>
-                    <small className="text-muted">
-                      Type :{" "}
-                      {item.course[0].type === "postgraduate"
-                        ? "Post Graduate"
-                        : "Master"}
-                    </small>
-                    <br />
+                    <div style={{ marginBottom: -2 }}>
+                      Instructed by {item.instructor[0].name}
+                    </div>
+                    <div style={{ marginBottom: -2 }}>
+                      <small className="text-muted">
+                        Type :{" "}
+                        {item.course[0].type === "postgraduate"
+                          ? "Post Graduate"
+                          : "Master"}
+                      </small>
+                    </div>
                     <small>
                       <Link
                         href="/administrator/class/edit/[class]"

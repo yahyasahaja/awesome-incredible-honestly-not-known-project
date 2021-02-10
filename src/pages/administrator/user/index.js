@@ -97,10 +97,10 @@ export default function Index({ enrollment }) {
                 >
                   <div>
                     <div>
-                      <b>{item.course[0].title}</b>
+                      <b>{item.user[0].name}</b>
                     </div>
                     <div>
-                      {item.user[0].name}{" "}
+                      {item.course[0].title}{" "}
                       {item.status === "0" && (
                         <Fragment>
                           {" / "}

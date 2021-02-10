@@ -1,7 +1,15 @@
 import Dynamic from "next/dynamic";
 import Router from "next/router";
 import React, { Fragment, useState } from "react";
-import { Breadcrumb, Button, Card, Container, Form } from "react-bootstrap";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Row,
+  Col,
+  Container,
+  Form,
+} from "react-bootstrap";
 import { encode } from "universal-base64";
 import Administrator from "../../../../../../../components/administrator";
 import Fetch from "../../../../../../../libraries/fetch";
@@ -58,12 +66,14 @@ export default function Index({ classdata }) {
     breadcrumb: { marginTop: -1.25 },
   };
   const app = useAdministrator();
+  const [order, setOrder] = useState("1");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   function addHandler() {
     setLoading(true);
     app.task.add({
+      order: order,
       title: title,
       description: encode(description),
       class: classdata._id,
@@ -129,15 +139,31 @@ export default function Index({ classdata }) {
           </Card.Header>
           <Card.Body>
             <Form>
-              <Form.Group>
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  value={title}
-                  disabled={loading}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Homework 1"
-                />
-              </Form.Group>
+              <Row>
+                <Col xs={2}>
+                  <Form.Group>
+                    <Form.Label>Order</Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={1}
+                      disabled={loading}
+                      value={order}
+                      onChange={(e) => setOrder(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={10}>
+                  <Form.Group>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      value={title}
+                      disabled={loading}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="e.g. Homework 1"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
                 <QuillClientSide

@@ -64,7 +64,7 @@ export async function getServerSideProps() {
 function Component({ children, gray }) {
   const styles = {
     true: {
-      paddingTop: 20,
+      paddingTop: 25,
       paddingBottom: 35,
       backgroundColor: "#F9F9F9",
     },
@@ -220,7 +220,7 @@ function Course({ course, title, description }) {
 function ContentParser({ title, content }) {
   return (
     <Container style={{ textAlign: "justify" }}>
-      <h4 style={{ marginBottom: 15 }}>{title}</h4>
+      <h2 style={{ marginBottom: 15 }}>{title}</h2>
       <div style={{ marginBottom: -20 }}>{ReactHtmlParser(content)}</div>
     </Container>
   );
@@ -229,7 +229,6 @@ function ContentParser({ title, content }) {
 function Footer() {
   const styles = {
     container: {
-      marginTop: -35,
       paddingTop: 20,
       paddingBottom: 20,
       backgroundColor: "#292B2C",

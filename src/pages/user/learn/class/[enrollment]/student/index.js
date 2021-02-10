@@ -16,40 +16,51 @@ export async function getServerSideProps(ctx) {
             _id
             name
           }
-        }
-        course {
-          bab {
+          task {
             _id
-            name
-            order
-            materi {
-              _id
-              name
-              order
-            }
           }
+          quiz {
+            _id
+          }
+        }
+        task {
+          _id
+        }
+      }
+      course {
+        bab {
+          materi {
+            _id
+          }
+        }
+        quiz {
+          _id
         }
       }
     }
   }`).then(result => {
     /* eslint-enable */
-    let total = 0;
-    result.data.enrollmentById.class[0].course[0].bab.forEach((bab) => {
-      total = total + bab.materi.length;
+    const enrollment = result.data.enrollmentById;
+    let total =
+      enrollment.class[0].task.length + enrollment.course[0].quiz.length;
+    enrollment.course[0].bab.forEach((bab) => {
+      total += bab.materi.length;
     });
     const student = [];
-    result.data.enrollmentById.class[0].enrollment.forEach((item) => {
+    enrollment.class[0].enrollment.forEach((item) => {
       student.unshift({
         _id: item.user[0]._id,
         name: item.user[0].name,
-        progress: (parseInt(item.materi) / total) * 100,
+        progress:
+          ((parseInt(item.materi) + item.task.length + item.quiz.length) /
+            total) *
+          100,
       });
     });
-
     return {
       class: {
-        _id: result.data.enrollmentById.class[0]._id,
-        name: result.data.enrollmentById.class[0].name,
+        _id: enrollment.class[0]._id,
+        name: enrollment.class[0].name,
       },
       student: student,
     };
@@ -80,7 +91,7 @@ export default function Index({ classdata, student }) {
                     <div>
                       <b>{item.name}</b>
                     </div>
-                    <div>Progress {item.progress}%</div>
+                    <div>Progress Overall {item.progress}%</div>
                   </ListGroup.Item>
                 );
               })}

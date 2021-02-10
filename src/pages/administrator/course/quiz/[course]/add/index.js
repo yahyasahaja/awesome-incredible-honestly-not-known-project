@@ -42,7 +42,8 @@ export default function Index({ course }) {
     breadcrumb: { marginTop: -1.25 },
   };
   const app = useAdministrator();
-  const [title, setTitle] = useState("");
+  const [quizOrder, setQuizOrder] = useState("");
+  const [quizTitle, setQuizTitle] = useState("");
   const [order, setOrder] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -56,7 +57,8 @@ export default function Index({ course }) {
     setLoading(true);
     app.quiz
       .add({
-        title: title,
+        order: quizOrder,
+        title: quizTitle,
         course: course._id,
       })
       .then((result) => {
@@ -179,9 +181,18 @@ export default function Index({ course }) {
                   <h5>Quiz Data :</h5>
                 </Form.Label>
                 <Form.Control
+                  type="number"
+                  placeholder="Order"
+                  value={quizOrder}
+                  onChange={(e) => setQuizOrder(e.target.value)}
+                  disabled={loading}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Control
                   placeholder="Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={quizTitle}
+                  onChange={(e) => setQuizTitle(e.target.value)}
                   disabled={loading}
                 />
               </Form.Group>
@@ -194,7 +205,7 @@ export default function Index({ course }) {
                     <div style={{ textAlign: "justify", marginLeft: 20 }}>
                       {item.question}
                     </div>
-                    <div style={{ marginLeft: 20 }}>
+                    <div style={{ marginLeft: 15 }}>
                       Answer: <b>{item.answer.toUpperCase()}</b> /{" "}
                       <a href="#!" onClick={() => editQuestionHandler(item)}>
                         Edit
@@ -368,7 +379,7 @@ export default function Index({ course }) {
                 Add Question
               </Button>
               <Button
-                disabled={loading || title === ""}
+                disabled={loading || quizOrder === "" || quizTitle === ""}
                 onClick={() => addHandler()}
               >
                 Add Quiz
