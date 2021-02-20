@@ -28,7 +28,7 @@ export default function Index() {
         style={{
           top: "50%",
           left: "50%",
-          width: "35%",
+          width: "25%",
           position: "absolute",
           transform: "translate(-55%, -55%)",
         }}

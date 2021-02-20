@@ -9,6 +9,7 @@ import LearningPath from "./learningpath";
 import Materi from "./materi";
 import Question from "./question";
 import Quiz from "./quiz";
+import Session from "./session";
 import Task from "./task";
 import User from "./user";
 
@@ -23,6 +24,7 @@ class AdministratorClass {
   materi = Materi;
   question = Question;
   quiz = Quiz;
+  session = Session;
   task = Task;
   user = User;
 }
