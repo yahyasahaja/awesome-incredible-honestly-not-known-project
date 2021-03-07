@@ -241,11 +241,9 @@ function Footer() {
   return (
     <div style={styles.container}>
       <div style={styles.text}>
-        <a href="#!">About</a>
-        {" / "}
-        <a href="#!">Contact</a>
-        {" / "}
         <Link href="/administrator">Administrator</Link>
+        {" / "}
+        <Link href="/instructor/login">Instructor</Link>
       </div>
       <small className="text-muted">
         <div style={styles.text}>
