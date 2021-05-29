@@ -132,7 +132,7 @@ function Home() {
             />
           </div>
         </div>
-        <img src="./partnership.png" style={styles.partnership} />
+        {/* <img src="./partnership.png" style={styles.partnership} /> */}
       </Container>
     </Fragment>
   );
@@ -261,7 +261,7 @@ export default function Index({ postgraduate, master, content }) {
       <Navbar />
       <Home />
       <Component gray={true}>
-        <Container>
+        <Container style={{ marginTop: 40 }}>
           <h2>Get Certified, Get Ahead with Our Programs</h2>
           <hr />
           <Course
