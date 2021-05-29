@@ -99,7 +99,7 @@ function Home() {
     },
     partnership: {
       width: "100%",
-      paddingTop: 20,
+      paddingTop: 60,
       paddingBottom: 20,
     },
   };
@@ -116,11 +116,11 @@ function Home() {
               85% report career benefits including promotion or a new job
             </h6>
             <div style={{ marginTop: 12.5, marginBottom: 12.5 }} />
-            <Row>
+            {/* <Row>
               <Col xs={5}>
                 <Button>All Courses</Button>
               </Col>
-            </Row>
+            </Row> */}
           </div>
           <div style={styles.right}>
             <YouTube
