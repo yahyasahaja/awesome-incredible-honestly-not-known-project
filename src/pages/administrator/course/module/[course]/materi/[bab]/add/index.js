@@ -187,7 +187,7 @@ export default function Index({ course, bab }) {
                   value={name}
                   disabled={loading}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. What Is Simplilearn?"
+                  placeholder="e.g. What Is Lambda Solusi Informatika?"
                 />
               </Form.Group>
               <Form.Group>

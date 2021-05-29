@@ -41,7 +41,7 @@ export default function Index() {
         }}
       >
         <div style={{ textAlign: "center" }}>
-          <h1>SIMPLILEARN</h1>
+          <h1>Lambda Solusi Informatika</h1>
           <h5>Log in to manage your classes and students</h5>
         </div>
         <hr />
